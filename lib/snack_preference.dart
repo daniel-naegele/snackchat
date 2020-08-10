@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class SnackPreference extends StatefulWidget {
   @override
@@ -51,7 +52,8 @@ class _SnackPreferenceState extends State<SnackPreference> {
                   ),
                   onPressed: () async {
                     if(!_key.currentState.validate()) return;
-
+                    final box = Hive.box('snack_box');
+                    box.put('preference', preference);
                     FirebaseUser user =
                         await FirebaseAuth.instance.currentUser();
                     if (user == null) return;

@@ -26,6 +26,7 @@ dependencies:
   neuomorphic_container: 2.0.3
   lit_firebase_auth: 0.2.1
   back_button_interceptor: 4.3.0
+  hive: 1.4.3
 
   # Firebase
   firebase_core: 0.4.5

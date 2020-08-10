@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,6 +9,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final box = Hive.box('snack_box'); // I like that name :D
+
+
   int _index = 0;
 
   @override
@@ -22,6 +27,8 @@ class _HomeState extends State<Home> {
       if (snapshot.data == null) {
         Future.delayed(Duration(milliseconds: 1550)).then(
             (value) => Navigator.pushNamed(context, '/user/preferences'));
+      } else {
+        box.put('preference', snapshot.data['preference']);
       }
     });
   }
