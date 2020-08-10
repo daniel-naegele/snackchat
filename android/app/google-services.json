@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "930184663597",
+    "firebase_url": "https://snack-dating-2981c.firebaseio.com",
+    "project_id": "snack-dating-2981c",
+    "storage_bucket": "snack-dating-2981c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930184663597:android:2b1616264c2506e2fb1ea4",
+        "android_client_info": {
+          "package_name": "de.butzlabben.snack_dating"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930184663597-d3gqqru3241vi8p81dh7tutmgblhq4g6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfGrqMOCR_ooDM58NOGOgbA8jyz1-_FE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930184663597-d3gqqru3241vi8p81dh7tutmgblhq4g6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
