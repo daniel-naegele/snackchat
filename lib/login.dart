@@ -45,7 +45,6 @@ class LogIn extends StatelessWidget {
               anonymousButton: ButtonConfig.raised(themedata: ButtonThemeData(), child: Text("Sign in anonymously", style: TextStyle(fontSize: 17))),
               googleButton: GoogleButtonConfig.light(),
               appleButton: AppleButtonConfig.dark(),
-
             ),
           ),
         ),

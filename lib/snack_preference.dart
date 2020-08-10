@@ -74,11 +74,11 @@ class _SnackPreferenceState extends State<SnackPreference> {
 
   String validator(String input) {
     RegExp regExp = RegExp('([1-6]{6})');
-    if (!regExp.hasMatch(input)) return "Bitte gebe eine gültige Preferenz an";
+    if (!regExp.hasMatch(input)) return "Bitte gebe eine gültige Präferenz an";
     for (int i = 0; i < input.length; i++) {
       String char = input[i];
       if (char.allMatches(input).length > 1)
-        return "Bitte gebe eine gültige Preferenz an";
+        return "Bitte gebe eine gültige Präferenz an";
     }
     return null;
   }

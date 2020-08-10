@@ -9,10 +9,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   final box = Hive.box('snack_box'); // I like that name :D
-
-
   int _index = 0;
 
   @override
@@ -25,8 +22,8 @@ class _HomeState extends State<Home> {
       DocumentReference docRef = collection.document(value.uid);
       DocumentSnapshot snapshot = await docRef.get();
       if (snapshot.data == null) {
-        Future.delayed(Duration(milliseconds: 1550)).then(
-            (value) => Navigator.pushNamed(context, '/user/preferences'));
+        Future.delayed(Duration(milliseconds: 1550))
+            .then((value) => Navigator.pushNamed(context, '/user/preferences'));
       } else {
         box.put('preference', snapshot.data['preference']);
       }
@@ -42,10 +39,17 @@ class _HomeState extends State<Home> {
         onTap: changeIndex,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.list), title: Text("Matches")),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text("Chats")),
+            icon: Icon(Icons.list),
+            title: Text("Matches"),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text("Einstellungen")),
+            icon: Icon(Icons.chat),
+            title: Text("Chats"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            title: Text("Einstellungen"),
+          ),
         ],
       ),
     );
