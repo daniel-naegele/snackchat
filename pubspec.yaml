@@ -24,6 +24,7 @@ dependencies:
 
   flutter_hooks: 0.13.0
   neuomorphic_container: 2.0.3
+  lit_firebase_auth: 0.2.1
 
   # Firebase
   firebase_core: 0.4.5
