@@ -1,32 +1,37 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:snack_dating/home.dart';
+import 'package:snack_dating/login.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(SnackDatingApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class SnackDatingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics().logAppOpen();
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Snack Dating',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Center(child: Text("Test"),)
+      routes: {
+        '/': (context) => SnackDatingMain(),
+
+      },
     );
+  }
+}
+
+class SnackDatingMain extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    AsyncSnapshot<FirebaseUser> snapshot = useStream(auth.onAuthStateChanged);
+    return snapshot.hasData ? Home() : Login();
   }
 }
