@@ -1,60 +1,74 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
 typedef void BoolCallback(bool value);
 
-class Matches extends StatelessWidget {
+class Matches extends HookWidget {
   final bool complementary;
+  final firestore = Firestore.instance;
+  final box = Hive.box('snack_box');
 
-  const Matches(this.complementary, {Key key}) : super(key: key);
+  Matches(this.complementary, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final box = Hive.box('snack_box');
     final uid = box.get('uid');
+    List chatPartners = box.get('chat_partners', defaultValue: []);
     String preference = box.get('preference');
     if (complementary) {
       preference = preference.substring(3) + preference.substring(0, 3);
     }
-    CollectionReference collection =
-        Firestore.instance.collection('preferences');
-    return StreamBuilder(
-      stream: collection.where('preference', isEqualTo: preference).snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Center(child: Text('Loading...'));
-        QuerySnapshot querySnapshot = snapshot.data;
-        List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
-        documents.removeWhere((doc) => doc.documentID == uid);
-        // TODO remove chat partners
-        if (documents.length == 0) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Kein Partner mit diesen Präferenzen wurden gefunden :c',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          );
-        }
-        return ListView.builder(
-          itemCount: documents.length,
-          itemBuilder: (context, index) =>
-              _buildTile(context, index, documents),
-        );
-      },
+
+    CollectionReference collection = firestore.collection('preferences');
+
+    AsyncSnapshot snapshot = useStream(
+        collection.where('preference', isEqualTo: preference).snapshots());
+
+    if (!snapshot.hasData) return Center(child: Text('Loading...'));
+    QuerySnapshot querySnapshot = snapshot.data;
+    List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
+    documents.removeWhere((doc) => doc.documentID == uid);
+    documents.removeWhere((doc) => chatPartners.contains(doc.documentID));
+
+    if (documents.length == 0) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Keine Partner mit diesen Präferenzen wurden gefunden :c',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+      );
+    }
+    return ListView.builder(
+      itemCount: documents.length,
+      itemBuilder: (context, index) => _buildTile(context, index, documents),
     );
   }
 
   Widget _buildTile(BuildContext context, int i, List<DocumentSnapshot> documents) {
+    final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
+    String id = doc.documentID;
     return ListTile(
       leading: Icon(Icons.account_circle),
-      title: Text(doc.documentID),
+      title: Text(id),
       subtitle: Text(doc.data['preference']),
+      onTap: () async {
+        DocumentReference document = firestore.collection('chats').document(); // Autogenerate the id
+        await document.setData({
+          'members': [uid, id],
+        });
+        List chatPartners = box.get('chat_partners', defaultValue: []);
+        chatPartners.add(id);
+        box.put('chat_partners', chatPartners);
+        Navigator.pushNamed(context, '/chats/${document.documentID}');
+      },
     );
   }
 }

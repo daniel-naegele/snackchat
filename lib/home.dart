@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:snack_dating/chats.dart';
 import 'package:snack_dating/matches.dart';
 import 'package:snack_dating/settings.dart';
 
@@ -73,6 +74,8 @@ class _HomeState extends State<Home> {
       _index = index;
       if (_index == 0) {
         _body = Matches(_complementary);
+      } else if (_index == 1) {
+        _body = Chats();
       } else if (_index == 2) {
         _body = Settings();
       }

@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lit_firebase_auth/lit_firebase_auth.dart';
+import 'package:snack_dating/chat.dart';
 import 'package:snack_dating/home.dart';
 import 'package:snack_dating/login.dart';
 import 'package:snack_dating/snack_preference.dart';
@@ -42,6 +43,11 @@ class SnackDatingApp extends StatelessWidget {
           '/user/login': (context) => LogIn(),
           '/user/preferences': (context) => SnackPreference(),
         },
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(builder: (context) {
+            return Chat(settings.name.split(RegExp('\/'))[2]);
+          }, settings: settings);
+        } ,
       ),
     );
   }
