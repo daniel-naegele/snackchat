@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:snack_dating/matches.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final box = Hive.box('snack_box'); // I like that name :D
   int _index = 0;
+  bool _complementary = false;
+  Widget _body = Matches(false);
 
   @override
   void initState() {
@@ -33,7 +36,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('Snack-Dating'))),
+      appBar: AppBar(
+        title: Text('Snack-Dating'),
+        centerTitle: true,
+        actions: [
+          _index != 0 ? Container() : FilterList(rebuildWithMatches, _complementary),
+        ],
+      ),
+      body: _body,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: changeIndex,
@@ -58,6 +68,13 @@ class _HomeState extends State<Home> {
   changeIndex(int index) {
     setState(() {
       _index = index;
+    });
+  }
+
+  rebuildWithMatches(bool complementary) {
+    setState(() {
+      _complementary = complementary;
+      _body = Matches(complementary);
     });
   }
 }
