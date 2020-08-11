@@ -111,13 +111,16 @@ class OwnChatMessage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          ConstrainedBox(
-            constraints: BoxConstraints.loose(Size.fromWidth(360)),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                message['text'],
-                style: TextStyle(fontSize: 20),
+          Outline(
+            color: Colors.blueAccent,
+            child: ConstrainedBox(
+              constraints: BoxConstraints.loose(Size.fromWidth(360)),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  message['text'],
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
             ),
           ),
@@ -141,24 +144,72 @@ class ForeignChatMessage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ConstrainedBox(
-              constraints: BoxConstraints.loose(Size.fromWidth(360)),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8.0, left: 8, bottom: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      message['text'],
-                      style: TextStyle(fontSize: 20),
-                    )
-                  ],
+            Outline(
+              color: Colors.white,
+              child: ConstrainedBox(
+                constraints: BoxConstraints.loose(Size.fromWidth(360)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        message['text'],
+                        style: TextStyle(fontSize: 20),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class Outline extends StatelessWidget {
+
+  final Widget child;
+  final Color color;
+
+  Outline({this.child, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Shadow(
+        child: Container(
+          decoration: new BoxDecoration(
+            color:
+            color == null ? Theme.of(context).dialogBackgroundColor : color,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class Shadow extends StatelessWidget {
+  final Widget child;
+
+  Shadow({this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: child,
+      decoration: new BoxDecoration(boxShadow: [
+        new BoxShadow(
+          color: Colors.black.withOpacity(0.14),
+          blurRadius: 19,
+          offset: Offset(0, 5),
+        ),
+      ]),
     );
   }
 }
