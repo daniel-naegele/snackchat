@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'components.dart';
 
@@ -15,7 +16,11 @@ class Settings extends StatelessWidget {
             'Ausloggen',
             style: TextStyle(color: Colors.white, fontSize: 24),
           ),
-          onPressed: () => FirebaseAuth.instance.signOut(),
+          onPressed: () async {
+            final box = Hive.box('snack_box');
+            await box.clear();
+            FirebaseAuth.instance.signOut();
+          },
         ),
 //        RaisedButton(
 //          color: Colors.red,
@@ -62,7 +67,7 @@ class FAQ extends StatelessWidget {
           Paragraph(
               text:
                   'Eigentlich eine Art Omegle oder ChatRoulette, aber basierend auf Snackspräferenzen. Das hier ist in erster Linie ein Spaßprojekt, aber weiß, was hier noch draus wird.'),
-          SubHeading(text: 'Welche Daten werden gesammelt'),
+          SubHeading(text: 'Welche Daten werden gesammelt?'),
           Paragraph(
               text:
                   'Wir speichern nur die Snack-Präferenzen und die Informationen, die wir von den Authentifizierungsprovidern (z. B. Google oder Apple) bekommen. '
