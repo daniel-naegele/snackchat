@@ -61,7 +61,7 @@ class Chat extends HookWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: IconButton(
                       icon: Icon(Icons.send, color: Colors.blueAccent),
-                      onPressed: () => onSend(uid, messages)),
+                      onPressed: () => onSend(uid)),
                 )
               ],
             ),
@@ -71,16 +71,16 @@ class Chat extends HookWidget {
     );
   }
 
-  onSend(String uid, List messages) async {
+  onSend(String uid) async {
     String text = controller.text;
     DocumentReference reference =
         firestore.collection('chats').document(chatId);
-    messages.add({
+    List messages = [{
       'text': text,
       'timestamp': DateTime.now(),
       'author': uid,
-    });
-    await reference.updateData(<String, Object>{'messages': messages});
+    }];
+    await reference.updateData(<String, Object>{'messages': FieldValue.arrayUnion(messages)});
     controller.clear();
   }
 }

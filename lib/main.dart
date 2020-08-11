@@ -85,21 +85,23 @@ class SnackDatingMain extends HookWidget {
     final firestore = Firestore.instance;
     await box.put('uid', user.uid);
 
-    DocumentSnapshot docSnapshot = await firestore.collection('preferences')
-        .document(user.uid).get();
-    if(docSnapshot.exists) {
+    DocumentSnapshot docSnapshot =
+        await firestore.collection('preferences').document(user.uid).get();
+    if (docSnapshot.exists) {
       await box.put('preference', docSnapshot.data['preference']);
     }
-    
+
     final analytics = FirebaseAnalytics();
     analytics.setUserId(user.uid);
     analytics.setUserProperty(name: 'preference', value: box.get('preference'));
-    if (user.email != '' && !user.isEmailVerified) user.sendEmailVerification();
+    if (user.email != null && user.email != '' && !user.isEmailVerified)
+      user.sendEmailVerification();
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');
     List chatPartners = box.get('chat_partners', defaultValue: []);
-    if(chatPartners.length != 0) return; // not the best method to determine if a user has re logged in, but it will work
+    if (chatPartners.length != 0)
+      return; // not the best method to determine if a user has re logged in, but it will work
     QuerySnapshot snapshot = await collection
         .where('members', arrayContains: user.uid)
         .getDocuments();
@@ -108,7 +110,7 @@ class SnackDatingMain extends HookWidget {
       List members = doc.data['members'];
       members.removeWhere((element) => element == user.uid);
       String id = members[0];
-      if(!chatPartners.contains(id)) chatPartners.add(id);
+      if (!chatPartners.contains(id)) chatPartners.add(id);
     }
     box.put('chat_partners', chatPartners);
   }
