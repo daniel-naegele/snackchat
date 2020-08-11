@@ -18,6 +18,7 @@ class Chats extends HookWidget {
     QuerySnapshot querySnapshot = snapshot.data;
     List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
 
+
     if (documents.length == 0) {
       return Center(
         child: Padding(
