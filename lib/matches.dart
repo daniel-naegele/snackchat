@@ -33,7 +33,7 @@ class Matches extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Kein Partner mit diesen Präferenzen wurde gefunden :c',
+                'Kein Partner mit diesen Präferenzen wurden gefunden :c',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),
               ),

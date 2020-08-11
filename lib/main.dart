@@ -56,8 +56,14 @@ class SnackDatingMain extends HookWidget {
     AsyncSnapshot<FirebaseUser> snapshot = useStream(auth.onAuthStateChanged);
     if (snapshot.hasData == true && _wasLoggedIn == false) {
       FirebaseUser user = snapshot.data;
-      Hive.box('snack_box').put('uid', user.uid);
-      if (user.email != '' && !user.isEmailVerified) user.sendEmailVerification();
+      final box = Hive.box('snack_box');
+      box.put('uid', user.uid);
+      final analytics = FirebaseAnalytics();
+      analytics.setUserId(user.uid);
+      analytics.setUserProperty(
+          name: 'preference', value: box.get('preference'));
+      if (user.email != '' && !user.isEmailVerified)
+        user.sendEmailVerification();
 
       Future.delayed(Duration(milliseconds: 1500)).then((value) {
         Navigator.popUntil(context, (route) => route.isFirst);
