@@ -12,7 +12,9 @@ class Matches extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String preference = Hive.box('snack_box').get('preference');
+    final box = Hive.box('snack_box');
+    final uid = box.get('uid');
+    String preference = box.get('preference');
     if (complementary) {
       preference = preference.substring(3) + preference.substring(0, 3);
     }
@@ -23,7 +25,10 @@ class Matches extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Center(child: Text('Loading...'));
         QuerySnapshot querySnapshot = snapshot.data;
-        if (querySnapshot.documents.length == 0) {
+        List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
+        documents.removeWhere((doc) => doc.documentID == uid);
+        // TODO remove chat partners
+        if (documents.length == 0) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -35,18 +40,17 @@ class Matches extends StatelessWidget {
             ),
           );
         }
-        // TODO remove chat partners
         return ListView.builder(
-          itemCount: querySnapshot.documents.length,
+          itemCount: documents.length,
           itemBuilder: (context, index) =>
-              _buildTile(context, index, querySnapshot),
+              _buildTile(context, index, documents),
         );
       },
     );
   }
 
-  Widget _buildTile(BuildContext context, int i, QuerySnapshot snapshot) {
-    DocumentSnapshot doc = snapshot.documents[i];
+  Widget _buildTile(BuildContext context, int i, List<DocumentSnapshot> documents) {
+    DocumentSnapshot doc = documents[i];
     return ListTile(
       leading: Icon(Icons.account_circle),
       title: Text(doc.documentID),

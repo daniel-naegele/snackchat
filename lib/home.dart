@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/matches.dart';
+import 'package:snack_dating/settings.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -40,7 +41,9 @@ class _HomeState extends State<Home> {
         title: Text('Snack-Dating'),
         centerTitle: true,
         actions: [
-          _index != 0 ? Container() : FilterList(rebuildWithMatches, _complementary),
+          _index != 0
+              ? Container()
+              : FilterList(rebuildWithMatches, _complementary),
         ],
       ),
       body: _body,
@@ -68,6 +71,11 @@ class _HomeState extends State<Home> {
   changeIndex(int index) {
     setState(() {
       _index = index;
+      if (_index == 0) {
+        _body = Matches(_complementary);
+      } else if (_index == 2) {
+        _body = Settings();
+      }
     });
   }
 
