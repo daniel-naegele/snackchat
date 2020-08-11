@@ -10,6 +10,7 @@ import 'package:lit_firebase_auth/lit_firebase_auth.dart';
 import 'package:snack_dating/chat.dart';
 import 'package:snack_dating/home.dart';
 import 'package:snack_dating/login.dart';
+import 'package:snack_dating/settings.dart';
 import 'package:snack_dating/snack_preference.dart';
 
 void main() async {
@@ -40,6 +41,9 @@ class SnackDatingApp extends StatelessWidget {
         ),
         routes: {
           '/': (context) => SnackDatingMain(),
+          '/imprint': (context) => Imprint(),
+          '/privacy': (context) => Privacy(),
+          '/faq': (context) => FAQ(),
           '/user/login': (context) => LogIn(),
           '/user/preferences': (context) => SnackPreference(),
         },

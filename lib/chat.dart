@@ -179,7 +179,7 @@ class Disclaimer extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'ACHTUNG: Dieser Chat ist nicht verschlüsselt. Obwohl nur Administratoren Zugriff auf die Daten haben, sollten sie keine sensiblen Informationen auf dieser Plattform austauschen.',
+              'ACHTUNG: Dieser Chat ist nicht verschlüsselt. Obwohl nur Administratoren Zugriff auf die Daten haben, sollten Sie keine sensiblen Informationen auf dieser Plattform austauschen.',
               textAlign: TextAlign.center,
             ),
           ),
