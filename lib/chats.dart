@@ -39,7 +39,7 @@ class Chats extends HookWidget {
   Widget _buildTile(BuildContext context, int i, List<DocumentSnapshot> documents) {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
-    List<Map<String, Object>> messages = doc.data['messages'];
+    List messages = doc.data['messages'];
     List members = doc.data['members'];
     members.removeWhere((element) => element == uid);
     String id = members[0];

@@ -19,7 +19,7 @@ class Matches extends HookWidget {
     List chatPartners = box.get('chat_partners', defaultValue: []);
     String preference = box.get('preference');
     if (complementary) {
-      preference = preference.substring(3) + preference.substring(0, 3);
+      preference = preference.split('').reversed.join();
     }
 
     CollectionReference collection = firestore.collection('preferences');

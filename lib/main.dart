@@ -45,7 +45,7 @@ class SnackDatingApp extends StatelessWidget {
         },
         onGenerateRoute: (settings) {
           return MaterialPageRoute(builder: (context) {
-            return Chat(settings.name.split(RegExp('\/'))[2]);
+            return Chat(settings.name.split('/')[2]);
           }, settings: settings);
         } ,
       ),
