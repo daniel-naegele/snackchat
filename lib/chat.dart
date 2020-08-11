@@ -26,8 +26,11 @@ class Chat extends HookWidget {
     return Scaffold(
       appBar: AppBar(title: Text(id)),
       body: ListView.builder(
+        itemCount: messages.length + 2,
+        reverse: true,
         itemBuilder: (context, i) {
-          if (i > 0) return ChatMessage(messages.reversed.toList()[i - 1], uid);
+          if (i > 0 && i - 1 < messages.length) return ChatMessage(messages.reversed.toList()[i - 1], uid);
+          if(i == messages.length + 1) return Disclaimer();
           return Container(
             height: 70,
             decoration: BoxDecoration(
@@ -64,8 +67,6 @@ class Chat extends HookWidget {
             ),
           );
         },
-        itemCount: messages.length + 1,
-        reverse: true,
       ),
     );
   }
@@ -169,8 +170,25 @@ class ForeignChatMessage extends StatelessWidget {
   }
 }
 
-class Outline extends StatelessWidget {
+class Disclaimer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Outline(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'ACHTUNG: Dieser Chat ist nicht verschlüsselt. Obwohl nur Administratoren Zugriff auf die Daten haben, sollten sie keine sensiblen Informationen auf dieser Plattform austauschen.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          color: Colors.yellow),
+    );
+  }
+}
 
+class Outline extends StatelessWidget {
   final Widget child;
   final Color color;
 
@@ -184,7 +202,7 @@ class Outline extends StatelessWidget {
         child: Container(
           decoration: new BoxDecoration(
             color:
-            color == null ? Theme.of(context).dialogBackgroundColor : color,
+                color == null ? Theme.of(context).dialogBackgroundColor : color,
             borderRadius: BorderRadius.circular(8),
           ),
           child: child,

@@ -23,6 +23,18 @@ class Settings extends StatelessWidget {
           ),
           onPressed: () {},
         ),
+        ListTile(
+          leading: Icon(Icons.question_answer),
+          title: Text('FAQ', style: TextStyle(fontSize: 24)),
+        ),
+        ListTile(
+          leading: Icon(Icons.contact_mail),
+          title: Text('Impressum', style: TextStyle(fontSize: 24)),
+        ),
+        ListTile(
+          leading: Icon(Icons.security),
+          title: Text('Datenschutz', style: TextStyle(fontSize: 24)),
+        ),
       ],
     );
   }
