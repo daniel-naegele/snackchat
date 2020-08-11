@@ -87,7 +87,7 @@ class SnackDatingMain extends HookWidget {
 
     DocumentSnapshot docSnapshot = await firestore.collection('preferences')
         .document(user.uid).get();
-    if(docSnapshot != null) {
+    if(docSnapshot.exists) {
       await box.put('preference', docSnapshot.data['preference']);
     }
     

@@ -16,11 +16,7 @@ class Settings extends StatelessWidget {
             'Ausloggen',
             style: TextStyle(color: Colors.white, fontSize: 24),
           ),
-          onPressed: () async {
-            final box = Hive.box('snack_box');
-            await box.clear();
-            FirebaseAuth.instance.signOut();
-          },
+          onPressed: () => logOut(context),
         ),
 //        RaisedButton(
 //          color: Colors.red,
@@ -46,6 +42,41 @@ class Settings extends StatelessWidget {
           onTap: () => Navigator.pushNamed(context, '/privacy'),
         ),
       ],
+    );
+  }
+
+  logOut(BuildContext context) async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    String content = 'Willst du dich wirklich ausloggen?';
+    if (user.isAnonymous) {
+      content +=
+          '\nACHTUNG: Du hast dich anonym eingeloggt, du wirst dich danach nie wieder einloggen können!';
+    }
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        title: Text('Ausloggen bestätigen'),
+        content: Text(content),
+        actions: [
+          RaisedButton(
+            child: Text('Ausloggen'),
+            color: Colors.red,
+            onPressed: () async {
+              final box = Hive.box('snack_box');
+              await box.clear();
+              await FirebaseAuth.instance.signOut();
+              Navigator.pop(context);
+            },
+          ),
+          RaisedButton(
+            child: Text('Abbrechen'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          Container(width: 8)
+        ],
+      ),
     );
   }
 }
