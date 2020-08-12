@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>930184663597-skg89d1jonpf170ifs8b4kbhmpug7vc6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.930184663597-skg89d1jonpf170ifs8b4kbhmpug7vc6</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>930184663597-9u1k2ecdqbd66hceghc1g8pkfn09u3ke.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCwecQ5okgrEFw3R_XZwI0ypUqKaSfNovI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>930184663597</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>de.butzlabben.snack-dating</string>
+	<key>PROJECT_ID</key>
+	<string>snack-dating-2981c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>snack-dating-2981c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:930184663597:ios:8a176e4324906bf2fb1ea4</string>
+	<key>DATABASE_URL</key>
+	<string>https://snack-dating-2981c.firebaseio.com</string>
+</dict>
+</plist>
