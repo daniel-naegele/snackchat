@@ -1,3 +1,4 @@
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +14,23 @@ class SnackPreference extends StatefulWidget {
 class _SnackPreferenceState extends State<SnackPreference> {
   String preference;
   final _key = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    return true;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +56,7 @@ class _SnackPreferenceState extends State<SnackPreference> {
                 TextFormField(
                   keyboardType: TextInputType.number,
                   onChanged: (val) => preference = val,
-                  decoration: InputDecoration(hintText: 'Bsp.: "61453"'),
+                  decoration: InputDecoration(hintText: 'Bsp.: "614532"'),
                   autovalidate: true,
                   validator: validator,
                 ),
