@@ -31,7 +31,6 @@ class _SnackPreferenceState extends State<SnackPreference> {
     return true;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

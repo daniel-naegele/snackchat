@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -29,7 +31,7 @@ class SnackDatingApp extends StatelessWidget {
       authProviders: AuthProviders(
         emailAndPassword: true,
         google: true,
-        apple: true,
+        apple: Platform.isIOS,
         anonymous: true,
         github: false,
         twitter: false,
