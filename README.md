@@ -1,4 +1,5 @@
 # snack_dating
+[![Codemagic build status](https://api.codemagic.io/apps/5f33b0f9beb12c284d4bd384/5f33b0f9beb12c284d4bd383/status_badge.svg)](https://codemagic.io/apps/5f33b0f9beb12c284d4bd384/5f33b0f9beb12c284d4bd383/latest_build)
 
 A dating app purely based on snack preferences
 
