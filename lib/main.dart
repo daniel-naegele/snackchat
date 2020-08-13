@@ -18,12 +18,7 @@ import 'package:snack_dating/settings.dart';
 import 'package:snack_dating/snack_preference.dart';
 
 void main() async {
-  Crashlytics.instance.enableInDevMode =
-  true; // turn this off after seeing reports in in the console.
-  FlutterError.onError = (FlutterErrorDetails details) {
-    print('Halloooooooooooooooooooooooooooooooooo');
-    Crashlytics.instance.recordFlutterError(details);
-  };
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
   await Hive.initFlutter();
   await Hive.openBox('snack_box');
   runApp(SnackDatingApp());
