@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
@@ -17,6 +18,12 @@ import 'package:snack_dating/settings.dart';
 import 'package:snack_dating/snack_preference.dart';
 
 void main() async {
+  Crashlytics.instance.enableInDevMode =
+  true; // turn this off after seeing reports in in the console.
+  FlutterError.onError = (FlutterErrorDetails details) {
+    print('Halloooooooooooooooooooooooooooooooooo');
+    Crashlytics.instance.recordFlutterError(details);
+  };
   await Hive.initFlutter();
   await Hive.openBox('snack_box');
   runApp(SnackDatingApp());
@@ -26,7 +33,6 @@ class SnackDatingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirebaseAnalytics().logAppOpen();
-
     return LitAuthInit(
       authProviders: AuthProviders(
         emailAndPassword: true,
@@ -88,7 +94,7 @@ class SnackDatingMain extends HookWidget {
     await box.put('uid', user.uid);
 
     DocumentSnapshot docSnapshot =
-        await firestore.collection('preferences').document(user.uid).get();
+    await firestore.collection('preferences').document(user.uid).get();
     if (docSnapshot.exists) {
       await box.put('preference', docSnapshot.data['preference']);
     }
