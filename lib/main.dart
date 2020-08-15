@@ -46,6 +46,7 @@ class SnackDatingApp extends StatelessWidget {
         routes: {
           '/': (context) => SnackDatingMain(),
           '/imprint': (context) => Imprint(),
+          '/eula': (context) => EULA(),
           '/privacy': (context) => Privacy(),
           '/faq': (context) => FAQ(),
           '/user/login': (context) => LogIn(),
@@ -91,9 +92,9 @@ class SnackDatingMain extends HookWidget {
     if (!box.containsKey('preference')) {
       DocumentSnapshot docSnapshot =
           await firestore.collection('users').document(user.uid).get();
-      await box.put('preference', docSnapshot.data['preference']);
-      List blocked = docSnapshot.data['blocked'];
-      box.put('blocked', blocked ?? []);
+      Map data = docSnapshot.data;
+      await box.put('preference', data != null ? data['preference']: 'no_valid_preference');
+      box.put('blocked', data != null ? data['blocked']: []);
     }
 
     final analytics = FirebaseAnalytics();

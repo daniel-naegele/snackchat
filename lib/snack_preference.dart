@@ -10,7 +10,6 @@ class SnackPreference extends StatefulWidget {
   _SnackPreferenceState createState() => _SnackPreferenceState();
 }
 
-// TODO intercept back button
 class _SnackPreferenceState extends State<SnackPreference> {
   String preference;
   final _key = GlobalKey<FormState>();

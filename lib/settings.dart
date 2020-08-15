@@ -8,7 +8,7 @@ import 'components.dart';
 class Settings extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final box = Hive.box('uid');
+    final box = Hive.box('snack_box');
     final uid = box.get('uid');
     return ListView(
       padding: EdgeInsets.all(16),
@@ -32,6 +32,7 @@ class Settings extends HookWidget {
 //          ),
 //          onPressed: () {},
 //        ),
+        SizedBox(height: 32),
         ListTile(
           leading: Icon(Icons.question_answer),
           title: Text('FAQ', style: TextStyle(fontSize: 24)),
@@ -134,7 +135,7 @@ class Imprint extends StatelessWidget {
           SizedBox(height: 24),
           SubHeading(text: 'Kontakt'),
           Paragraph(
-            text: 'info@naegele.dev',
+            text: 'Email: info@naegele.dev \nTelefon: +4915734299398',
           ),
         ],
       ),

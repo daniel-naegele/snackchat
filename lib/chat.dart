@@ -105,7 +105,8 @@ class Chat extends HookWidget {
       'Blockieren',
       context,
       () async {
-        DocumentReference document =  Firestore.instance.collection('users').document(box.get('uid'));
+        DocumentReference document =
+            Firestore.instance.collection('users').document(box.get('uid'));
         List localBlocked = box.get('blocked', defaultValue: []);
         localBlocked.add(user);
         box.put('blocked', localBlocked);
@@ -170,9 +171,16 @@ class Chat extends HookWidget {
   showSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
-      child: SimpleDialog(
-        title: Text('Aktion erfolgreich ausgeführt'),
-      ),
+      child: SimpleDialog(children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Aktion erfolgreich ausgeführt',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ]),
     );
   }
 }
