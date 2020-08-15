@@ -104,7 +104,19 @@ class Chat extends HookWidget {
       'Bist du dir sicher, dass du diesen Benutzer blockieren möchtest? Diese Aktion kann nicht rückgängig gemacht werden.',
       'Blockieren',
       context,
-      () {},
+      () async {
+        DocumentReference document =  Firestore.instance.collection('users').document(box.get('uid'));
+        List localBlocked = box.get('blocked', defaultValue: []);
+        localBlocked.add(user);
+        box.put('blocked', localBlocked);
+        List blocks = [user];
+        await document.updateData({'blocked': FieldValue.arrayUnion(blocks)});
+        Navigator.pop(context);
+        showSuccessDialog(context);
+        await Future.delayed(Duration(seconds: 5));
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -117,7 +129,7 @@ class Chat extends HookWidget {
       () async {
         CollectionReference collection =
             Firestore.instance.collection('reports');
-        collection.document().setData({
+        await collection.document().setData({
           'timestamp': DateTime.now(),
           'by': box.get('uid'),
           'reported': user,

@@ -88,10 +88,12 @@ class SnackDatingMain extends HookWidget {
     final firestore = Firestore.instance;
     await box.put('uid', user.uid);
 
-    DocumentSnapshot docSnapshot =
-    await firestore.collection('preferences').document(user.uid).get();
-    if (docSnapshot.exists) {
+    if (!box.containsKey('preference')) {
+      DocumentSnapshot docSnapshot =
+          await firestore.collection('users').document(user.uid).get();
       await box.put('preference', docSnapshot.data['preference']);
+      List blocked = docSnapshot.data['blocked'];
+      box.put('blocked', blocked ?? []);
     }
 
     final analytics = FirebaseAnalytics();

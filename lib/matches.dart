@@ -22,7 +22,7 @@ class Matches extends HookWidget {
       preference = preference.split('').reversed.join();
     }
 
-    CollectionReference collection = firestore.collection('preferences');
+    CollectionReference collection = firestore.collection('users');
 
     AsyncSnapshot snapshot = useStream(
         collection.where('preference', isEqualTo: preference).snapshots());

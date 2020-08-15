@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
     FirebaseAuth.instance.currentUser().then((value) async {
       if (value == null) return;
       CollectionReference collection =
-          Firestore.instance.collection('preferences');
+          Firestore.instance.collection('users');
       DocumentReference docRef = collection.document(value.uid);
       DocumentSnapshot snapshot = await docRef.get();
       if (snapshot.data == null) {

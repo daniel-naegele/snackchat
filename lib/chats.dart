@@ -9,6 +9,7 @@ class Chats extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final uid = box.get('uid');
+    List blocked = box.get('blocked', defaultValue: []);
     CollectionReference collection = Firestore.instance.collection('chats');
     AsyncSnapshot snapshot = useStream(collection
         .where('members', arrayContains: uid)
@@ -18,6 +19,8 @@ class Chats extends HookWidget {
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;
     List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
+
+    documents.removeWhere((element) => blocked.contains(getOtherUser(element.data['members'])));
 
     if (documents.length == 0) {
       return Center(
@@ -39,17 +42,20 @@ class Chats extends HookWidget {
 
   Widget _buildTile(
       BuildContext context, int i, List<DocumentSnapshot> documents) {
-    final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
     List messages = doc.data['messages'];
-    List members = doc.data['members'];
-    members.removeWhere((element) => element == uid);
-    String id = members[0];
     return ListTile(
       leading: Icon(Icons.chat_bubble),
-      title: Text(id),
+      title: Text(getOtherUser(doc['members'])),
       subtitle: Text(messages == null ? '' : messages.last['text']),
       onTap: () => Navigator.pushNamed(context, '/chats/${doc.documentID}'),
     );
+  }
+
+  String getOtherUser(List members) {
+    final uid = box.get('uid');
+    members.removeWhere((element) => element == uid);
+    String id = members[0];
+    return id;
   }
 }

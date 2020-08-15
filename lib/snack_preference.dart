@@ -75,7 +75,7 @@ class _SnackPreferenceState extends State<SnackPreference> {
                         await FirebaseAuth.instance.currentUser();
                     if (user == null) return;
                     CollectionReference collection =
-                        Firestore.instance.collection('preferences');
+                        Firestore.instance.collection('users');
                     DocumentReference docRef = collection.document(user.uid);
                     await docRef.setData({"preference": preference});
                     Navigator.pop(context);
