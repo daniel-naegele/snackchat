@@ -4,20 +4,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
 class Chats extends HookWidget {
-
   final box = Hive.box('snack_box');
 
   @override
   Widget build(BuildContext context) {
     final uid = box.get('uid');
     CollectionReference collection = Firestore.instance.collection('chats');
-    AsyncSnapshot snapshot =
-        useStream(collection.where('members', arrayContains: uid).snapshots());
+    AsyncSnapshot snapshot = useStream(collection
+        .where('members', arrayContains: uid)
+        .orderBy('last_message', descending: true)
+        .snapshots());
 
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;
     List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
-
 
     if (documents.length == 0) {
       return Center(
@@ -37,7 +37,8 @@ class Chats extends HookWidget {
     );
   }
 
-  Widget _buildTile(BuildContext context, int i, List<DocumentSnapshot> documents) {
+  Widget _buildTile(
+      BuildContext context, int i, List<DocumentSnapshot> documents) {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
     List messages = doc.data['messages'];

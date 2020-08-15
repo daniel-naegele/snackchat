@@ -24,13 +24,22 @@ class Chat extends HookWidget {
     members.removeWhere((element) => element == uid);
     String id = members[0];
     return Scaffold(
-      appBar: AppBar(title: Text(id)),
+      appBar: AppBar(
+        title: Text(id),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.block), onPressed: () => blockUser(id, context)),
+          IconButton(
+              icon: Icon(Icons.flag), onPressed: () => reportUser(id, context))
+        ],
+      ),
       body: ListView.builder(
         itemCount: messages.length + 2,
         reverse: true,
         itemBuilder: (context, i) {
-          if (i > 0 && i - 1 < messages.length) return ChatMessage(messages.reversed.toList()[i - 1], uid);
-          if(i == messages.length + 1) return Disclaimer();
+          if (i > 0 && i - 1 < messages.length)
+            return ChatMessage(messages.reversed.toList()[i - 1], uid);
+          if (i == messages.length + 1) return Disclaimer();
           return Container(
             height: 70,
             decoration: BoxDecoration(
@@ -75,13 +84,84 @@ class Chat extends HookWidget {
     String text = controller.text;
     DocumentReference reference =
         firestore.collection('chats').document(chatId);
-    List messages = [{
-      'text': text,
-      'timestamp': DateTime.now(),
-      'author': uid,
-    }];
-    await reference.updateData(<String, Object>{'messages': FieldValue.arrayUnion(messages)});
+    List messages = [
+      {
+        'text': text,
+        'timestamp': DateTime.now(),
+        'author': uid,
+      }
+    ];
+    await reference.updateData(<String, Object>{
+      'messages': FieldValue.arrayUnion(messages),
+      'last_message': DateTime.now(),
+    });
     controller.clear();
+  }
+
+  blockUser(String user, BuildContext context) {
+    showConfirmDialog(
+      'Blockieren bestätigen',
+      'Bist du dir sicher, dass du diesen Benutzer blockieren möchtest? Diese Aktion kann nicht rückgängig gemacht werden.',
+      'Blockieren',
+      context,
+      () {},
+    );
+  }
+
+  reportUser(String user, BuildContext context) {
+    showConfirmDialog(
+      'Melden bestätigen',
+      'Bist du dir sicher, dass du diesen Benutzer melden möchtest? Diese Aktion kann nicht rückgängig gemacht werden.',
+      'Melden',
+      context,
+      () async {
+        CollectionReference collection =
+            Firestore.instance.collection('reports');
+        collection.document().setData({
+          'timestamp': DateTime.now(),
+          'by': box.get('uid'),
+          'reported': user,
+        });
+        Navigator.pop(context);
+        showSuccessDialog(context);
+        await Future.delayed(Duration(seconds: 5));
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  showConfirmDialog(String title, String body, String buttonText,
+      BuildContext context, Function callback) {
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          RaisedButton(
+            child: Text(buttonText),
+            color: Colors.red,
+            onPressed: callback,
+          ),
+          RaisedButton(
+            child: Text('Abbrechen'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          Container(width: 8)
+        ],
+      ),
+    );
+  }
+
+  showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      child: SimpleDialog(
+        title: Text('Aktion erfolgreich ausgeführt'),
+      ),
+    );
   }
 }
 

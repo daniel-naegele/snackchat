@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
 import 'components.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final box = Hive.box('uid');
+    final uid = box.get('uid');
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
@@ -17,6 +20,9 @@ class Settings extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontSize: 24),
           ),
           onPressed: () => logOut(context),
+        ),
+        ListTile(
+          title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 24)),
         ),
 //        RaisedButton(
 //          color: Colors.red,

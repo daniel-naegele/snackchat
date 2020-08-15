@@ -63,6 +63,7 @@ class Matches extends HookWidget {
         DocumentReference document = firestore.collection('chats').document(); // Autogenerate the id
         await document.setData({
           'members': [uid, id],
+          'last_message': DateTime.now(),
         });
         List chatPartners = box.get('chat_partners', defaultValue: []);
         chatPartners.add(id);
