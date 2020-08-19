@@ -228,7 +228,7 @@ class _EULAState extends State<EULA> {
               child: FlatButton(
                 onPressed: () {
                   if(_accepted != 1) return;
-                  Navigator.pushReplacementNamed(context, '/user/preferences');
+                  Navigator.pushReplacementNamed(context, '/user/login');
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

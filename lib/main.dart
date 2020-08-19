@@ -72,9 +72,10 @@ class SnackDatingMain extends HookWidget {
     FirebaseAuth auth = FirebaseAuth.instance;
     AsyncSnapshot<FirebaseUser> snapshot = useStream(auth.onAuthStateChanged);
 
-    if (snapshot.hasData == true && _wasLoggedIn == false) {
+    if (snapshot.hasData != _wasLoggedIn) {
       FirebaseUser user = snapshot.data;
-      setUser(user);
+      if (user != null) setUser(user);
+
       Future.delayed(Duration(milliseconds: 1500)).then((value) {
         Navigator.popUntil(context, (route) => route.isFirst);
       });
@@ -93,8 +94,9 @@ class SnackDatingMain extends HookWidget {
       DocumentSnapshot docSnapshot =
           await firestore.collection('users').document(user.uid).get();
       Map data = docSnapshot.data;
-      await box.put('preference', data != null ? data['preference']: 'no_valid_preference');
-      box.put('blocked', data != null ? data['blocked']: []);
+      await box.put('preference',
+          data != null ? data['preference'] : 'no_valid_preference');
+      box.put('blocked', data != null ? data['blocked'] : []);
     }
 
     final analytics = FirebaseAnalytics();
