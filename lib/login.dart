@@ -212,22 +212,23 @@ class _EULAState extends State<EULA> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Radio(
-                    value: 0, groupValue: _accepted, onChanged: changeAccepted),
-                Text('Decline'),
-                Radio(
-                    value: 1, groupValue: _accepted, onChanged: changeAccepted),
-                Text('Accept'),
-              ],
+            RadioListTile(
+              value: 0,
+              groupValue: _accepted,
+              onChanged: changeAccepted,
+              title: Text('Decline'),
+            ),
+            RadioListTile(
+              value: 1,
+              groupValue: _accepted,
+              onChanged: changeAccepted,
+              title: Text('Accept'),
             ),
             Outline(
               color: _accepted == 0 ? Colors.grey : Colors.amberAccent,
               child: FlatButton(
                 onPressed: () {
-                  if(_accepted != 1) return;
+                  if (_accepted != 1) return;
                   Navigator.pushReplacementNamed(context, '/user/login');
                 },
                 child: Padding(
