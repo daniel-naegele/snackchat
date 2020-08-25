@@ -81,6 +81,7 @@ class Settings extends HookWidget {
             onPressed: () async {
               final box = Hive.box('snack_box');
               await box.clear();
+              FirebaseAnalytics().logEvent(name: "logout");
               await FirebaseAuth.instance.signOut();
               Navigator.pop(context);
             },

@@ -78,8 +78,6 @@ class SnackDatingMain extends HookWidget {
       if (user != null) {
         analytics.logEvent(name: "login");
         setUser(user);
-      } else {
-        analytics.logEvent(name: "logout");
       }
 
       Future.delayed(Duration(milliseconds: 1500)).then((value) {
