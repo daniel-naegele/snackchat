@@ -102,8 +102,6 @@ class SnackDatingMain extends HookWidget {
     final analytics = FirebaseAnalytics();
     analytics.setUserId(user.uid);
     analytics.setUserProperty(name: 'preference', value: box.get('preference'));
-    if (user.email != null && user.email != '' && !user.isEmailVerified)
-      user.sendEmailVerification();
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');
