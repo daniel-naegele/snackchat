@@ -66,6 +66,7 @@ class SnackDatingApp extends StatelessWidget {
 
 class SnackDatingMain extends HookWidget {
   bool _wasLoggedIn;
+  final analytics = FirebaseAnalytics();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,12 @@ class SnackDatingMain extends HookWidget {
 
     if (snapshot.hasData != _wasLoggedIn) {
       FirebaseUser user = snapshot.data;
-      if (user != null) setUser(user);
+      if (user != null) {
+        analytics.logEvent(name: "login");
+        setUser(user);
+      } else {
+        analytics.logEvent(name: "logout");
+      }
 
       Future.delayed(Duration(milliseconds: 1500)).then((value) {
         Navigator.popUntil(context, (route) => route.isFirst);
@@ -99,9 +105,7 @@ class SnackDatingMain extends HookWidget {
       box.put('blocked', data != null ? data['blocked'] : []);
     }
 
-    final analytics = FirebaseAnalytics();
     analytics.setUserId(user.uid);
-    analytics.setUserProperty(name: 'preference', value: box.get('preference'));
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');

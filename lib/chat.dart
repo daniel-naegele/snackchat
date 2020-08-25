@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
@@ -8,6 +9,7 @@ class Chat extends HookWidget {
   final Firestore firestore = Firestore.instance;
   final box = Hive.box('snack_box');
   final TextEditingController controller = TextEditingController();
+  final analytics = FirebaseAnalytics();
 
   Chat(this.chatId, {Key key}) : super(key: key);
 
@@ -95,6 +97,7 @@ class Chat extends HookWidget {
       'messages': FieldValue.arrayUnion(messages),
       'last_message': DateTime.now(),
     });
+    analytics.logEvent(name: "send_message", parameters: {"id": chatId});
     controller.clear();
   }
 
@@ -112,6 +115,7 @@ class Chat extends HookWidget {
         box.put('blocked', localBlocked);
         List blocks = [user];
         await document.updateData({'blocked': FieldValue.arrayUnion(blocks)});
+        analytics.logEvent(name: "block_user", parameters: {"id": chatId});
         Navigator.pop(context);
         showSuccessDialog(context);
         await Future.delayed(Duration(seconds: 5));
@@ -135,6 +139,7 @@ class Chat extends HookWidget {
           'by': box.get('uid'),
           'reported': user,
         });
+        analytics.logEvent(name: "report_user", parameters: {"id": chatId});
         Navigator.pop(context);
         showSuccessDialog(context);
         await Future.delayed(Duration(seconds: 5));

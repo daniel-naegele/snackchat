@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -65,6 +66,7 @@ class Matches extends HookWidget {
           'members': [uid, id],
           'last_message': DateTime.now(),
         });
+        FirebaseAnalytics().logEvent(name: "create_chat", parameters: {"id": document.documentID});
         List chatPartners = box.get('chat_partners', defaultValue: []);
         chatPartners.add(id);
         box.put('chat_partners', chatPartners);

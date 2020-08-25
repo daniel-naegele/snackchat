@@ -1,5 +1,6 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,9 @@ class _SnackPreferenceState extends State<SnackPreference> {
                         Firestore.instance.collection('users');
                     DocumentReference docRef = collection.document(user.uid);
                     await docRef.setData({"preference": preference});
+                    FirebaseAnalytics analytics = FirebaseAnalytics();
+                    analytics.setUserProperty(name: 'preference', value: preference);
+                    analytics.logEvent(name: "set_preference");
                     Navigator.pop(context);
                   },
                 ),

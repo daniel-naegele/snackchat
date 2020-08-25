@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -36,17 +37,26 @@ class Settings extends HookWidget {
         ListTile(
           leading: Icon(Icons.question_answer),
           title: Text('FAQ', style: TextStyle(fontSize: 24)),
-          onTap: () => Navigator.pushNamed(context, '/faq'),
+          onTap: () {
+            FirebaseAnalytics().logEvent(name: "open_faq");
+            Navigator.pushNamed(context, '/faq');
+          },
         ),
         ListTile(
           leading: Icon(Icons.contact_mail),
           title: Text('Impressum', style: TextStyle(fontSize: 24)),
-          onTap: () => Navigator.pushNamed(context, '/imprint'),
+          onTap:  () {
+            FirebaseAnalytics().logEvent(name: "open_imprint");
+            Navigator.pushNamed(context, '/imprint');
+          },
         ),
         ListTile(
           leading: Icon(Icons.security),
           title: Text('Datenschutz', style: TextStyle(fontSize: 24)),
-          onTap: () => Navigator.pushNamed(context, '/privacy'),
+          onTap: () {
+            FirebaseAnalytics().logEvent(name: "open_privacy");
+            Navigator.pushNamed(context, '/privacy');
+          },
         ),
       ],
     );
