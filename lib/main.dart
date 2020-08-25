@@ -31,7 +31,7 @@ class SnackDatingApp extends StatelessWidget {
     return LitAuthInit(
       authProviders: AuthProviders(
         emailAndPassword: true,
-        google: Platform.isAndroid
+        google: Platform.isAndroid,
         apple: false,
         anonymous: true,
         github: false,
