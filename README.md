@@ -8,7 +8,7 @@ A dating app purely based on snack preferences
 This app has three goals: being user-friendly, respecting users privacy as much as possible and finally: bring a smile to the faces of the users.
 
 ## Download
-Android: https://play.google.com/store/apps/details?id=de.butzlabben.snack_dating
+Android: https://play.google.com/store/apps/details?id=de.butzlabben.snack_dating   
 iOS: https://testflight.apple.com/join/fGbgCkQt
 
 ## FAQ
