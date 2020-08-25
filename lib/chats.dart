@@ -9,7 +9,7 @@ class Chats extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final uid = box.get('uid');
-    List blocked = box.get('blocked', defaultValue: []);
+    List blocked = box.get('blocked') ?? [];
     CollectionReference collection = Firestore.instance.collection('chats');
     AsyncSnapshot snapshot = useStream(collection
         .where('members', arrayContains: uid)
