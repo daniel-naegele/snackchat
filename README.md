@@ -12,7 +12,7 @@ Android: https://play.google.com/store/apps/details?id=de.butzlabben.snack_datin
 iOS: https://testflight.apple.com/join/fGbgCkQt
 
 ## FAQ
-\- Why is the link at iOS not a regular AppStore linke?
-Because Apple rejects most of all dating apps because of spam
-- But why though?
-Because it's fun and a great learning opportunity
+\- Why is the link at iOS not a regular AppStore linke? 
+Because Apple rejects most of all dating apps because of spam   
+\- But why though?  
+Because it's fun and a great learning opportunity   
