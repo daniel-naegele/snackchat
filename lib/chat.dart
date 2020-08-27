@@ -84,6 +84,7 @@ class Chat extends HookWidget {
 
   onSend(String uid) async {
     String text = controller.text;
+    if (text == null || text == "") return;
     DocumentReference reference =
         firestore.collection('chats').document(chatId);
     List messages = [
