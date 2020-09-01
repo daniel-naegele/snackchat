@@ -10,7 +10,7 @@ class Chats extends HookWidget {
   Widget build(BuildContext context) {
     final uid = box.get('uid');
     List blocked = box.get('blocked') ?? [];
-    CollectionReference collection = Firestore.instance.collection('chats');
+    CollectionReference collection = FirebaseFirestore.instance.collection('chats');
     AsyncSnapshot snapshot = useStream(collection
         .where('members', arrayContains: uid)
         .orderBy('last_message', descending: true)
@@ -18,9 +18,9 @@ class Chats extends HookWidget {
 
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;
-    List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
+    List<QueryDocumentSnapshot> documents = List()..addAll(querySnapshot.docs);
 
-    documents.removeWhere((element) => blocked.contains(getOtherUser(element.data['members'])));
+    documents.removeWhere((element) => blocked.contains(getOtherUser(element.data()['members'])));
 
     if (documents.length == 0) {
       return Center(
@@ -43,12 +43,12 @@ class Chats extends HookWidget {
   Widget _buildTile(
       BuildContext context, int i, List<DocumentSnapshot> documents) {
     DocumentSnapshot doc = documents[i];
-    List messages = doc.data['messages'];
+    List messages = doc.data()['messages'];
     return ListTile(
       leading: Icon(Icons.chat_bubble),
-      title: Text(getOtherUser(doc['members'])),
+      title: Text(getOtherUser(doc.data()['members'])),
       subtitle: Text(messages == null ? '' : messages.last['text']),
-      onTap: () => Navigator.pushNamed(context, '/chats/${doc.documentID}'),
+      onTap: () => Navigator.pushNamed(context, '/chats/${doc.id}'),
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
-import 'components.dart';
+import '../components.dart';
 
 class Settings extends HookWidget {
   @override
@@ -24,6 +24,9 @@ class Settings extends HookWidget {
         ),
         ListTile(
           title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 24)),
+        ),
+        ListTile(
+          title: Text('Snack-Präferenz: ${box.get('preference')}', style: TextStyle(fontSize: 24)),
         ),
 //        RaisedButton(
 //          color: Colors.red,
@@ -62,8 +65,8 @@ class Settings extends HookWidget {
     );
   }
 
-  logOut(BuildContext context) async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+  logOut(BuildContext context) {
+    User user = FirebaseAuth.instance.currentUser;
     String content = 'Willst du dich wirklich ausloggen?';
     if (user.isAnonymous) {
       content +=

@@ -9,7 +9,7 @@ typedef void BoolCallback(bool value);
 
 class Matches extends HookWidget {
   final bool complementary;
-  final firestore = Firestore.instance;
+  final firestore = FirebaseFirestore.instance;
   final box = Hive.box('snack_box');
 
   Matches(this.complementary, {Key key}) : super(key: key);
@@ -30,9 +30,9 @@ class Matches extends HookWidget {
 
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;
-    List<DocumentSnapshot> documents = List()..addAll(querySnapshot.documents);
-    documents.removeWhere((doc) => doc.documentID == uid);
-    documents.removeWhere((doc) => chatPartners.contains(doc.documentID));
+    List<QueryDocumentSnapshot> documents = List()..addAll(querySnapshot.docs);
+    documents.removeWhere((doc) => doc.id == uid);
+    documents.removeWhere((doc) => chatPartners.contains(doc.id));
 
     if (documents.length == 0) {
       return Center(
@@ -55,22 +55,22 @@ class Matches extends HookWidget {
   Widget _buildTile(BuildContext context, int i, List<DocumentSnapshot> documents) {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
-    String id = doc.documentID;
+    String id = doc.id;
     return ListTile(
       leading: Icon(Icons.account_circle),
       title: Text(id),
-      subtitle: Text(doc.data['preference']),
+      subtitle: Text(doc.data()['preference']),
       onTap: () async {
-        DocumentReference document = firestore.collection('chats').document(); // Autogenerate the id
-        await document.setData({
+        DocumentReference document = firestore.collection('chats').doc(); // Autogenerate the id
+        await document.set({
           'members': [uid, id],
           'last_message': DateTime.now(),
         });
-        FirebaseAnalytics().logEvent(name: "create_chat", parameters: {"id": document.documentID});
+        FirebaseAnalytics().logEvent(name: "create_chat", parameters: {"id": document.id});
         List chatPartners = box.get('chat_partners', defaultValue: []);
         chatPartners.add(id);
         box.put('chat_partners', chatPartners);
-        Navigator.pushNamed(context, '/chats/${document.documentID}');
+        Navigator.pushNamed(context, '/chats/${document.id}');
       },
     );
   }

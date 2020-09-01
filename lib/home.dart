@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/chats.dart';
 import 'package:snack_dating/matches.dart';
-import 'package:snack_dating/settings.dart';
+import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/settings.dart' as settings;
 
 class Home extends StatefulWidget {
   @override
@@ -20,19 +20,20 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    FirebaseAuth.instance.currentUser().then((value) async {
-      if (value == null) return;
-      CollectionReference collection =
-          Firestore.instance.collection('users');
-      DocumentReference docRef = collection.document(value.uid);
+    final exec = () async {
+      User user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      CollectionReference collection = FirebaseFirestore.instance.collection('users');
+      DocumentReference docRef = collection.doc(user.uid);
       DocumentSnapshot snapshot = await docRef.get();
       if (snapshot.data == null) {
         Future.delayed(Duration(milliseconds: 1550))
             .then((value) => Navigator.pushNamed(context, '/user/preferences'));
       } else {
-        box.put('preference', snapshot.data['preference']);
+        box.put('preference', snapshot.data()['preference']);
       }
-    });
+    };
+    exec();
   }
 
   @override
@@ -77,7 +78,7 @@ class _HomeState extends State<Home> {
       } else if (_index == 1) {
         _body = Chats();
       } else if (_index == 2) {
-        _body = Settings();
+        _body = settings.Settings();
       }
     });
   }

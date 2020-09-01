@@ -68,18 +68,18 @@ class _SnackPreferenceState extends State<SnackPreference> {
                     style: TextStyle(fontSize: 24),
                   ),
                   onPressed: () async {
-                    if(!_key.currentState.validate()) return;
+                    if (!_key.currentState.validate()) return;
                     final box = Hive.box('snack_box');
                     box.put('preference', preference);
-                    FirebaseUser user =
-                        await FirebaseAuth.instance.currentUser();
+                    User user = FirebaseAuth.instance.currentUser;
                     if (user == null) return;
                     CollectionReference collection =
-                        Firestore.instance.collection('users');
-                    DocumentReference docRef = collection.document(user.uid);
-                    await docRef.setData({"preference": preference});
+                        FirebaseFirestore.instance.collection('users');
+                    DocumentReference docRef = collection.doc(user.uid);
+                    await docRef.set({"preference": preference});
                     FirebaseAnalytics analytics = FirebaseAnalytics();
-                    analytics.setUserProperty(name: 'preference', value: preference);
+                    analytics.setUserProperty(
+                        name: 'preference', value: preference);
                     analytics.logEvent(name: "set_preference");
                     Navigator.pop(context);
                   },

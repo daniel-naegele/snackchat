@@ -6,7 +6,7 @@ import 'package:hive/hive.dart';
 
 class Chat extends HookWidget {
   final String chatId;
-  final Firestore firestore = Firestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final box = Hive.box('snack_box');
   final TextEditingController controller = TextEditingController();
   final analytics = FirebaseAnalytics();
@@ -17,12 +17,12 @@ class Chat extends HookWidget {
   Widget build(BuildContext context) {
     final uid = box.get('uid');
     DocumentReference reference =
-        firestore.collection('chats').document(chatId);
+        firestore.collection('chats').doc(chatId);
     AsyncSnapshot snapshot = useStream(reference.snapshots());
     if (!snapshot.hasData) return Scaffold();
     DocumentSnapshot doc = snapshot.data;
-    List messages = doc.data['messages'] ?? [];
-    List members = doc.data['members'];
+    List messages = doc.data()['messages'] ?? [];
+    List members = doc.data()['members'];
     members.removeWhere((element) => element == uid);
     String id = members[0];
     return Scaffold(
@@ -86,7 +86,7 @@ class Chat extends HookWidget {
     String text = controller.text;
     if (text == null || text == "") return;
     DocumentReference reference =
-        firestore.collection('chats').document(chatId);
+        firestore.collection('chats').doc(chatId);
     List messages = [
       {
         'text': text,
@@ -94,7 +94,7 @@ class Chat extends HookWidget {
         'author': uid,
       }
     ];
-    await reference.updateData(<String, Object>{
+    await reference.update(<String, Object>{
       'messages': FieldValue.arrayUnion(messages),
       'last_message': DateTime.now(),
     });
@@ -110,12 +110,12 @@ class Chat extends HookWidget {
       context,
       () async {
         DocumentReference document =
-            Firestore.instance.collection('users').document(box.get('uid'));
+            FirebaseFirestore.instance.collection('users').doc(box.get('uid'));
         List localBlocked = box.get('blocked', defaultValue: []);
         localBlocked.add(user);
         box.put('blocked', localBlocked);
         List blocks = [user];
-        await document.updateData({'blocked': FieldValue.arrayUnion(blocks)});
+        await document.update({'blocked': FieldValue.arrayUnion(blocks)});
         analytics.logEvent(name: "block_user", parameters: {"id": chatId});
         Navigator.pop(context);
         showSuccessDialog(context);
@@ -134,8 +134,8 @@ class Chat extends HookWidget {
       context,
       () async {
         CollectionReference collection =
-            Firestore.instance.collection('reports');
-        await collection.document().setData({
+            FirebaseFirestore.instance.collection('reports');
+        await collection.doc().set({
           'timestamp': DateTime.now(),
           'by': box.get('uid'),
           'reported': user,
