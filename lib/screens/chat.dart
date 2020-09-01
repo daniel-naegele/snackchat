@@ -23,11 +23,17 @@ class Chat extends HookWidget {
     DocumentSnapshot doc = snapshot.data;
     List messages = doc.data()['messages'] ?? [];
     List members = doc.data()['members'];
-    members.removeWhere((element) => element == uid);
-    String id = members[0];
+    List preferences = doc.data()['preferences'];
+    int foreignIndex = members.indexOf(uid) == 0 ? 1 : 0;
+    String id = members[foreignIndex];
     return Scaffold(
       appBar: AppBar(
-        title: Text(id),
+        title: Column(
+          children: [
+            Text(id),
+            if(preferences != null) Text(preferences[foreignIndex])
+          ],
+        ),
         actions: [
           IconButton(
               icon: Icon(Icons.block), onPressed: () => blockUser(id, context)),
