@@ -11,6 +11,7 @@ class Settings extends HookWidget {
   Widget build(BuildContext context) {
     final box = Hive.box('snack_box');
     final uid = box.get('uid');
+    final preference = box.get('preference');
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
@@ -23,10 +24,10 @@ class Settings extends HookWidget {
           onPressed: () => logOut(context),
         ),
         ListTile(
-          title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 24)),
+          title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 20)),
         ),
         ListTile(
-          title: Text('Snack-Präferenz: ${box.get('preference')}', style: TextStyle(fontSize: 24)),
+          title: Text('Snack-Präferenz: $preference', style: TextStyle(fontSize: 20)),
         ),
 //        RaisedButton(
 //          color: Colors.red,

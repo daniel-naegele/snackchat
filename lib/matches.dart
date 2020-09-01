@@ -56,14 +56,16 @@ class Matches extends HookWidget {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
     String id = doc.id;
+    String preference = doc.data()['preference'];
     return ListTile(
       leading: Icon(Icons.account_circle),
       title: Text(id),
-      subtitle: Text(doc.data()['preference']),
+      subtitle: Text(preference),
       onTap: () async {
         DocumentReference document = firestore.collection('chats').doc(); // Autogenerate the id
         await document.set({
           'members': [uid, id],
+          'preferences': [box.get('preference'), preference],
           'last_message': DateTime.now(),
         });
         FirebaseAnalytics().logEvent(name: "create_chat", parameters: {"id": document.id});
