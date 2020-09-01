@@ -18,75 +18,78 @@ class _LogInState extends State<LogIn> {
     return Scaffold(
       body: Form(
         key: _key,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              validator: validateEmailAddress,
-              onSaved: (_) => email = _,
-              autocorrect: false,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.email),
-                border: border,
-                labelText: 'Email',
-              ),
-            ),
-            TextFormField(
-              validator: validatePassword,
-              onSaved: (_) => password = _,
-              autocorrect: false,
-              obscureText: true,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.vpn_key),
-                labelText: 'Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(7),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                validator: validateEmailAddress,
+                onSaved: (_) => email = _,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.email),
+                  border: border,
+                  labelText: 'Email',
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                RaisedButton(
-                  onPressed: signIn,
-                  color: Colors.yellow,
-                  child: Text('Sign In'),
+              TextFormField(
+                validator: validatePassword,
+                onSaved: (_) => password = _,
+                autocorrect: false,
+                obscureText: true,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.vpn_key),
+                  labelText: 'Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
                 ),
-                RaisedButton(
-                  onPressed: register,
-                  color: Colors.grey,
-                  child: Text('Register'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'or',
-              style: Theme.of(context).textTheme.overline,
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 300),
-              child: const Divider(
-                thickness: 2,
               ),
-            ),
-            RaisedButton(
-              onPressed: signIn,
-              color: Colors.blue,
-              child: Text('Sign In Anonymously'),
-            ),
-            if (Platform.isAndroid)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  RaisedButton(
+                    onPressed: signIn,
+                    color: Colors.yellow,
+                    child: Text('Sign In'),
+                  ),
+                  RaisedButton(
+                    onPressed: register,
+                    color: Colors.grey,
+                    child: Text('Register'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'or',
+                style: Theme.of(context).textTheme.overline,
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 300),
+                child: const Divider(
+                  thickness: 2,
+                ),
+              ),
               RaisedButton(
                 onPressed: signIn,
                 color: Colors.blue,
-                child: Row(
-                  children: [
-                    OAuthIcon.google(),
-                    Text('Sign In with Google'),
-                  ],
-                ),
+                child: Text('Sign In Anonymously'),
               ),
-          ],
+              if (Platform.isAndroid)
+                RaisedButton(
+                  onPressed: signIn,
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      OAuthIcon.google(),
+                      Text('Sign In with Google'),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

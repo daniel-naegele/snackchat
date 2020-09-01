@@ -5,17 +5,19 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:snack_dating/home.dart';
+import 'package:snack_dating/screens/start_screen.dart';
+
 import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/chat.dart';
 import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/eula.dart';
-import 'package:snack_dating/home.dart';
 import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/login.dart';
 import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/settings.dart';
 import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/snack_preference.dart';
-import 'package:snack_dating/screens/start_screen.dart';
 
 void main() async {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
@@ -84,10 +86,16 @@ class SnackDatingMain extends HookWidget {
     final box = Hive.box('snack_box');
     final firestore = FirebaseFirestore.instance;
     await box.put('uid', user.uid);
+    DocumentReference reference = firestore.collection('users').doc(user.uid);
+    DocumentSnapshot docSnapshot = await reference.get();
+
+    FirebaseMessaging messaging = FirebaseMessaging();
+    messaging.setAutoInitEnabled(true);
+    messaging.subscribeToTopic("/all");
+    final fcmToken = await messaging.getToken();
+    reference.update({'fcm': fcmToken});
 
     if (!box.containsKey('preference')) {
-      DocumentSnapshot docSnapshot =
-          await firestore.collection('users').doc(user.uid).get();
       Map data = docSnapshot.data();
       docSnapshot.metadata;
       await box.put('preference',
@@ -102,9 +110,8 @@ class SnackDatingMain extends HookWidget {
     List chatPartners = box.get('chat_partners', defaultValue: []);
     if (chatPartners.length != 0)
       return; // not the best method to determine if a user has re logged in, but it will work
-    QuerySnapshot snapshot = await collection
-        .where('members', arrayContains: user.uid)
-        .get();
+    QuerySnapshot snapshot =
+        await collection.where('members', arrayContains: user.uid).get();
     List docs = snapshot.docs;
     for (QueryDocumentSnapshot doc in docs) {
       List members = doc.data()['members'];
