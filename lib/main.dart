@@ -36,7 +36,7 @@ class SnackDatingApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: {
-        '/': (context) => LogIn(),
+        '/': (context) => SnackDatingMain(),
         '/imprint': (context) => Imprint(),
         '/eula': (context) => EULA(),
         '/privacy': (context) => Privacy(),
