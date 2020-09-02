@@ -29,6 +29,7 @@ dependencies:
   hive: 1.4.3
   hive_flutter: ^0.3.1
   provider:
+  intl: 0.16.1
 
   # Firebase
   firebase_analytics: ^5.0.16

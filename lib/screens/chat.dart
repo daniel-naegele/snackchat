@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 class Chat extends HookWidget {
   final String chatId;
@@ -230,9 +231,17 @@ class OwnChatMessage extends StatelessWidget {
               constraints: BoxConstraints.loose(Size.fromWidth(360)),
               child: Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text(
-                  message['text'],
-                  style: TextStyle(fontSize: 20),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      message['text'],
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      toDateString(message['timestamp']),
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -269,6 +278,10 @@ class ForeignChatMessage extends StatelessWidget {
                       Text(
                         message['text'],
                         style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        toDateString(message['timestamp']),
+                        style: TextStyle(fontSize: 12),
                       )
                     ],
                   ),
@@ -342,4 +355,10 @@ class Shadow extends StatelessWidget {
       ]),
     );
   }
+}
+
+
+String toDateString(Timestamp time) {
+  final format = DateFormat('dd.MM.yy hh:mm');
+  return format.format(time.toDate());
 }
