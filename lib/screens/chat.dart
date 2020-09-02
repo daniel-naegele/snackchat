@@ -232,6 +232,7 @@ class OwnChatMessage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(
                       message['text'],

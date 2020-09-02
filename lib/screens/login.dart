@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
@@ -127,7 +128,7 @@ class _LogInState extends State<LogIn> {
   signInAnon() async {
     showLoading();
     await auth.signInAnonymously();
-    analytics.logLogin(loginMethod: "anonymous");
+    analytics.logSignUp(signUpMethod: "anonymous");
     await setUser(auth.currentUser);
   }
 
@@ -211,10 +212,11 @@ class _LogInState extends State<LogIn> {
     final box = Hive.box('snack_box');
     await box.put('uid', user.uid);
 
+    DocumentReference reference = firestore.collection('users').doc(user.uid);
+    DocumentSnapshot docSnapshot = await reference.get();
+
     bool hasPreference = true;
     if (!box.containsKey('preference')) {
-      DocumentSnapshot docSnapshot =
-          await firestore.collection('users').doc(user.uid).get();
       Map data = docSnapshot.data();
       hasPreference = data != null;
       await box.put('preference',
@@ -223,6 +225,12 @@ class _LogInState extends State<LogIn> {
     }
 
     analytics.setUserId(user.uid);
+    String token = await FirebaseMessaging().getToken();
+    if (docSnapshot.exists) {
+      await reference.set({'fcm': token});
+    } else {
+      await reference.update({'fcm': token});
+    }
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');

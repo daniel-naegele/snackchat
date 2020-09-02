@@ -76,7 +76,7 @@ class _SnackPreferenceState extends State<SnackPreference> {
                     CollectionReference collection =
                         FirebaseFirestore.instance.collection('users');
                     DocumentReference docRef = collection.doc(user.uid);
-                    await docRef.set({"preference": preference});
+                    await docRef.update({"preference": preference});
                     FirebaseAnalytics analytics = FirebaseAnalytics();
                     analytics.setUserProperty(
                         name: 'preference', value: preference);
