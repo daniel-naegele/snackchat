@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
+import 'package:snack_dating/composition/components.dart';
 import 'package:snack_dating/composition/oauth_logos.dart';
 
 class LogIn extends StatefulWidget {
@@ -61,15 +62,19 @@ class _LogInState extends State<LogIn> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      RaisedButton(
-                        onPressed: signIn,
+                      Outline(
                         color: Colors.yellow,
-                        child: Text('Sign In'),
+                        child: FlatButton(
+                          onPressed: signIn,
+                          child: Text('Sign In', style: TextStyle(fontSize: 18)),
+                        ),
                       ),
-                      RaisedButton(
-                        onPressed: register,
+                      Outline(
                         color: Colors.grey,
-                        child: Text('Register'),
+                        child: FlatButton(
+                          onPressed: register,
+                          child: Text('Register', style: TextStyle(color: Colors.white, fontSize: 18)),
+                        ),
                       ),
                     ],
                   ),
@@ -85,22 +90,26 @@ class _LogInState extends State<LogIn> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  RaisedButton(
-                    onPressed: signIn,
+                  Outline(
                     color: Colors.blue,
-                    child: Text('Sign In Anonymously'),
+                    child: FlatButton(
+                      onPressed: signIn,
+                      child: Text('Sign In Anonymously', style: TextStyle(color: Colors.white, fontSize: 18)),
+                    ),
                   ),
-                  RaisedButton(
-                    onPressed: signInWithGoogle,
+                  Outline(
                     color: Colors.white,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        OAuthIcon.google(),
-                        SizedBox(width: 8),
-                        Text('Sign In with Google'),
-                      ],
+                    child: FlatButton(
+                      onPressed: signInWithGoogle,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OAuthIcon.google(),
+                          SizedBox(width: 8),
+                          Text('Sign In with Google', style: TextStyle(fontSize: 18)),
+                        ],
+                      ),
                     ),
                   ),
                 ],

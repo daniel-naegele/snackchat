@@ -99,9 +99,9 @@ class Shadow extends StatelessWidget {
       child: child,
       decoration: new BoxDecoration(boxShadow: [
         new BoxShadow(
-          color: Colors.black.withOpacity(0.14),
-          blurRadius: 19,
-          offset: Offset(0, 5),
+          color: Colors.black.withOpacity(0.16),
+          blurRadius: 15,
+          offset: Offset(0, 4),
         ),
       ]),
     );
