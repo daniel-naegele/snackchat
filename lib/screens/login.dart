@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +19,7 @@ class _LogInState extends State<LogIn> {
   final _key = GlobalKey<FormState>();
   final analytics = FirebaseAnalytics();
   final auth = FirebaseAuth.instance;
+  final messaging = FirebaseMessaging();
   final firestore = FirebaseFirestore.instance;
 
   String email, password;
@@ -225,12 +228,13 @@ class _LogInState extends State<LogIn> {
     }
 
     analytics.setUserId(user.uid);
-    String token = await FirebaseMessaging().getToken();
-    if (docSnapshot.exists) {
+    String token = await messaging.getToken();
+    if (!docSnapshot.exists) {
       await reference.set({'fcm': token});
     } else {
       await reference.update({'fcm': token});
     }
+    if(Platform.isIOS) await messaging.requestNotificationPermissions();
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');

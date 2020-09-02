@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/chats.dart';
@@ -35,6 +36,8 @@ class _HomeState extends State<Home> {
       } else {
         box.put('preference', snapshot.data()['preference']);
       }
+
+      FirebaseMessaging().onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
     };
     exec();
   }

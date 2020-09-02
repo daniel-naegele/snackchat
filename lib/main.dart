@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,6 +20,9 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('snack_box');
   await Firebase.initializeApp();
+  FirebaseMessaging messaging = FirebaseMessaging();
+  await messaging.setAutoInitEnabled(true);
+  await messaging.subscribeToTopic('all');
   runApp(SnackDatingApp());
 }
 

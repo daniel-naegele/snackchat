@@ -238,6 +238,7 @@ class OwnChatMessage extends StatelessWidget {
                       message['text'],
                       style: TextStyle(fontSize: 20),
                     ),
+                    SizedBox(height: 2),
                     Text(
                       toDateString(message['timestamp']),
                       style: TextStyle(fontSize: 12),
@@ -280,6 +281,7 @@ class ForeignChatMessage extends StatelessWidget {
                         message['text'],
                         style: TextStyle(fontSize: 20),
                       ),
+                      SizedBox(height: 2),
                       Text(
                         toDateString(message['timestamp']),
                         style: TextStyle(fontSize: 12),
