@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/composition/oauth_logos.dart';
 
@@ -89,20 +90,19 @@ class _LogInState extends State<LogIn> {
                     color: Colors.blue,
                     child: Text('Sign In Anonymously'),
                   ),
-                  if (Platform.isAndroid)
-                    RaisedButton(
-                      onPressed: signInWithGoogle,
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OAuthIcon.google(),
-                          SizedBox(width: 8),
-                          Text('Sign In with Google'),
-                        ],
-                      ),
+                  RaisedButton(
+                    onPressed: signInWithGoogle,
+                    color: Colors.white,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OAuthIcon.google(),
+                        SizedBox(width: 8),
+                        Text('Sign In with Google'),
+                      ],
                     ),
+                  ),
                 ],
               ),
             ),
@@ -171,7 +171,25 @@ class _LogInState extends State<LogIn> {
     }
   }
 
-  signInWithGoogle() {}
+  signInWithGoogle() async {
+    Navigator.pushNamed(context, '/loading');
+    // Trigger the authentication flow
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    // Create a new credential
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    await auth.signInWithCredential(credential);
+    analytics.logSignUp(signUpMethod: 'google');
+    setUser(auth.currentUser);
+  }
 
   popUntilRoot() =>
       Navigator.popUntil(context, (route) => route.settings.name == '/');
