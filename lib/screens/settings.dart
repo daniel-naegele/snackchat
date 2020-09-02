@@ -15,19 +15,22 @@ class Settings extends HookWidget {
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
-        RaisedButton(
-          color: Colors.red,
-          child: Text(
-            'Ausloggen',
-            style: TextStyle(color: Colors.white, fontSize: 24),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: RaisedButton(
+            color: Colors.red,
+            child: Text(
+              'Ausloggen',
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            onPressed: () => logOut(context),
           ),
-          onPressed: () => logOut(context),
         ),
         ListTile(
-          title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 20)),
+          title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 22)),
         ),
         ListTile(
-          title: Text('Snack-Präferenz: $preference', style: TextStyle(fontSize: 20)),
+          title: Text('Snack-Präferenz: $preference', style: TextStyle(fontSize: 22)),
         ),
 //        RaisedButton(
 //          color: Colors.red,

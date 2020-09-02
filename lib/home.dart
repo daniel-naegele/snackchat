@@ -23,12 +23,15 @@ class _HomeState extends State<Home> {
     final exec = () async {
       User user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
-      CollectionReference collection = FirebaseFirestore.instance.collection('users');
+      CollectionReference collection =
+          FirebaseFirestore.instance.collection('users');
       DocumentReference docRef = collection.doc(user.uid);
       DocumentSnapshot snapshot = await docRef.get();
       if (snapshot.data == null) {
-        Future.delayed(Duration(milliseconds: 1550))
-            .then((value) => Navigator.pushNamed(context, '/user/preferences'));
+        Future.delayed(Duration(milliseconds: 1550)).then((value) {
+          if (ModalRoute.of(context).settings.name != '/user/preferences')
+            Navigator.pushNamed(context, '/user/preferences');
+        });
       } else {
         box.put('preference', snapshot.data()['preference']);
       }

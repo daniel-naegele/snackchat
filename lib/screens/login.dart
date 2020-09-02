@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,7 +33,7 @@ class _LogInState extends State<LogIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFormField(
-                    validator: validateEmailAddress,
+                    validator: (_) => validateEmailAddress(_),
                     onSaved: (_) => email = _.trim(),
                     autocorrect: false,
                     decoration: InputDecoration(
@@ -46,7 +44,7 @@ class _LogInState extends State<LogIn> {
                   ),
                   SizedBox(height: 8),
                   TextFormField(
-                    validator: validatePassword,
+                    validator: (_) => validatePassword(_),
                     onSaved: (_) => password = _.trim(),
                     autocorrect: false,
                     obscureText: true,
@@ -66,14 +64,17 @@ class _LogInState extends State<LogIn> {
                         color: Colors.yellow,
                         child: FlatButton(
                           onPressed: signIn,
-                          child: Text('Sign In', style: TextStyle(fontSize: 18)),
+                          child:
+                              Text('Sign In', style: TextStyle(fontSize: 18)),
                         ),
                       ),
                       Outline(
                         color: Colors.grey,
                         child: FlatButton(
                           onPressed: register,
-                          child: Text('Register', style: TextStyle(color: Colors.white, fontSize: 18)),
+                          child: Text('Register',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18)),
                         ),
                       ),
                     ],
@@ -93,8 +94,9 @@ class _LogInState extends State<LogIn> {
                   Outline(
                     color: Colors.blue,
                     child: FlatButton(
-                      onPressed: signIn,
-                      child: Text('Sign In Anonymously', style: TextStyle(color: Colors.white, fontSize: 18)),
+                      onPressed: signInAnon,
+                      child: Text('Sign In Anonymously',
+                          style: TextStyle(color: Colors.white, fontSize: 18)),
                     ),
                   ),
                   Outline(
@@ -107,7 +109,8 @@ class _LogInState extends State<LogIn> {
                         children: [
                           OAuthIcon.google(),
                           SizedBox(width: 8),
-                          Text('Sign In with Google', style: TextStyle(fontSize: 18)),
+                          Text('Sign In with Google',
+                              style: TextStyle(fontSize: 18)),
                         ],
                       ),
                     ),
@@ -122,7 +125,7 @@ class _LogInState extends State<LogIn> {
   }
 
   signInAnon() async {
-    Navigator.pushNamed(context, '/loading');
+    showLoading();
     await auth.signInAnonymously();
     analytics.logLogin(loginMethod: "anonymous");
     await setUser(auth.currentUser);
@@ -133,24 +136,24 @@ class _LogInState extends State<LogIn> {
     if (!state.validate()) return;
     state.save();
 
-    Navigator.pushNamed(context, '/loading');
+    showLoading();
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       analytics.logLogin(loginMethod: 'email');
       setUser(auth.currentUser);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-disabled') {
-        showFailureDialog(
-            'Benutzer deaktiviert', 'Der Benutzer wurde aus Sicherheitsgründen deaktiviert. Bitte wende dich an info@naegele.dev');
+        showFailureDialog('Benutzer deaktiviert',
+            'Der Benutzer wurde aus Sicherheitsgründen deaktiviert. Bitte wende dich an info@naegele.dev');
       } else if (e.code == 'invalid-email') {
         showFailureDialog(
             'Ungültige E-Mail', 'Die angegebene E-Mail ist ungültig.');
       } else if (e.code == 'user-not-found') {
         showFailureDialog('Ungültiger Benutzer',
             'Es konnte kein Benutzer mit dieser E-Mail gefunden werden.');
-      }else if (e.code == 'wrong-password') {
-        showFailureDialog('Ungültiges Passwort',
-            'Das angegebene Passwort ist falsch.');
+      } else if (e.code == 'wrong-password') {
+        showFailureDialog(
+            'Ungültiges Passwort', 'Das angegebene Passwort ist falsch.');
       }
     }
   }
@@ -160,7 +163,7 @@ class _LogInState extends State<LogIn> {
     if (!state.validate()) return;
     state.save();
 
-    Navigator.pushNamed(context, '/loading');
+    showLoading();
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -181,12 +184,13 @@ class _LogInState extends State<LogIn> {
   }
 
   signInWithGoogle() async {
-    Navigator.pushNamed(context, '/loading');
+    showLoading();
     // Trigger the authentication flow
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     // Create a new credential
     final GoogleAuthCredential credential = GoogleAuthProvider.credential(
@@ -254,6 +258,19 @@ class _LogInState extends State<LogIn> {
       ),
     );
   }
+
+  showLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      child: Center(
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
+          backgroundColor: Colors.transparent,
+        ),
+      ),
+    );
+  }
 }
 
 final border = OutlineInputBorder(
@@ -263,7 +280,7 @@ final border = OutlineInputBorder(
 String validateEmailAddress(String input) {
   const emailRegex =
       r"""^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""";
-  if (RegExp(emailRegex).hasMatch(input.trim())) {
+  if (!RegExp(emailRegex).hasMatch(input.trim()) || input.trim().isEmpty) {
     return "Bitte gebe eine gültige E-Mail an.";
   } else {
     return null;
@@ -271,7 +288,7 @@ String validateEmailAddress(String input) {
 }
 
 String validatePassword(String input) {
-  if (input.trim().length >= 6) {
+  if (input.trim().length <= 6) {
     return "Bitte gebe ein längeres Passwort an";
   } else {
     return null;

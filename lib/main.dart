@@ -43,12 +43,6 @@ class SnackDatingApp extends StatelessWidget {
         '/faq': (context) => FAQ(),
         '/user/login': (context) => LogIn(),
         '/user/preferences': (context) => SnackPreference(),
-        '/loading': (context) => Center(
-          child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
-            backgroundColor: Colors.transparent,
-          ),
-        ),
       },
       onGenerateRoute: (settings) {
         return MaterialPageRoute(

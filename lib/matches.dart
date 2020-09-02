@@ -23,8 +23,11 @@ class Matches extends HookWidget {
       preference = preference.split('').reversed.join();
     }
 
-    CollectionReference collection = firestore.collection('users');
+    if (preference == null || preference == '') {
+      preference = "no_valid_preference";
+    }
 
+    CollectionReference collection = firestore.collection('users');
     AsyncSnapshot snapshot = useStream(
         collection.where('preference', isEqualTo: preference).snapshots());
 
@@ -52,7 +55,8 @@ class Matches extends HookWidget {
     );
   }
 
-  Widget _buildTile(BuildContext context, int i, List<DocumentSnapshot> documents) {
+  Widget _buildTile(
+      BuildContext context, int i, List<DocumentSnapshot> documents) {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
     String id = doc.id;
@@ -62,13 +66,15 @@ class Matches extends HookWidget {
       title: Text(id),
       subtitle: Text(preference),
       onTap: () async {
-        DocumentReference document = firestore.collection('chats').doc(); // Autogenerate the id
+        DocumentReference document =
+            firestore.collection('chats').doc(); // Autogenerate the id
         await document.set({
           'members': [uid, id],
           'preferences': [box.get('preference'), preference],
           'last_message': DateTime.now(),
         });
-        FirebaseAnalytics().logEvent(name: "create_chat", parameters: {"id": document.id});
+        FirebaseAnalytics()
+            .logEvent(name: "create_chat", parameters: {"id": document.id});
         List chatPartners = box.get('chat_partners', defaultValue: []);
         chatPartners.add(id);
         box.put('chat_partners', chatPartners);
