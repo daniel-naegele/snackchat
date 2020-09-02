@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/chats.dart';
 import 'package:snack_dating/matches.dart';
-import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/settings.dart' as settings;
+import 'package:snack_dating/screens/settings.dart' as settings;
 
 class Home extends StatefulWidget {
   @override

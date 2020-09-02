@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:snack_dating/components.dart';
+import 'package:snack_dating/composition/components.dart';
 
 class UserAuth extends StatelessWidget {
   @override

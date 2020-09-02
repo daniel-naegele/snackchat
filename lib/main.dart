@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/chat.dart';
-import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/eula.dart';
 import 'package:snack_dating/home.dart';
-import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/login.dart';
-import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/settings.dart';
-import 'file:///C:/Users/Daniel/IdeaProjects/PersonalProjects/snack_dating/lib/screens/snack_preference.dart';
+import 'package:snack_dating/screens/chat.dart';
+import 'package:snack_dating/screens/eula.dart';
+import 'package:snack_dating/screens/login.dart';
+import 'package:snack_dating/screens/settings.dart';
+import 'package:snack_dating/screens/snack_preference.dart';
 import 'package:snack_dating/screens/start_screen.dart';
 
 void main() async {
@@ -36,13 +36,19 @@ class SnackDatingApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: {
-        '/': (context) => SnackDatingMain(),
+        '/': (context) => LogIn(),
         '/imprint': (context) => Imprint(),
         '/eula': (context) => EULA(),
         '/privacy': (context) => Privacy(),
         '/faq': (context) => FAQ(),
         '/user/login': (context) => LogIn(),
         '/user/preferences': (context) => SnackPreference(),
+        '/loading': (context) => Center(
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
+            backgroundColor: Colors.transparent,
+          ),
+        ),
       },
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
@@ -102,9 +108,8 @@ class SnackDatingMain extends HookWidget {
     List chatPartners = box.get('chat_partners', defaultValue: []);
     if (chatPartners.length != 0)
       return; // not the best method to determine if a user has re logged in, but it will work
-    QuerySnapshot snapshot = await collection
-        .where('members', arrayContains: user.uid)
-        .get();
+    QuerySnapshot snapshot =
+        await collection.where('members', arrayContains: user.uid).get();
     List docs = snapshot.docs;
     for (QueryDocumentSnapshot doc in docs) {
       List members = doc.data()['members'];

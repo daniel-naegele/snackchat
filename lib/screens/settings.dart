@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
-import '../components.dart';
+import '../composition/components.dart';
 
 class Settings extends HookWidget {
   @override

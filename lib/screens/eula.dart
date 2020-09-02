@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snack_dating/components.dart';
+import 'package:snack_dating/composition/components.dart';
 
 class EULA extends StatefulWidget {
   @override
