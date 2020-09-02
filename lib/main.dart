@@ -62,7 +62,6 @@ class SnackDatingApp extends StatelessWidget {
 }
 
 class SnackDatingMain extends HookWidget {
-  bool _wasLoggedIn;
   final analytics = FirebaseAnalytics();
 
   @override
@@ -70,53 +69,6 @@ class SnackDatingMain extends HookWidget {
     FirebaseAuth auth = FirebaseAuth.instance;
     AsyncSnapshot<User> snapshot = useStream(auth.authStateChanges());
 
-    if (snapshot.hasData != _wasLoggedIn) {
-      User user = snapshot.data;
-      if (user != null) {
-        analytics.logEvent(name: "login");
-        setUser(user);
-      }
-
-      Future.delayed(Duration(milliseconds: 1500)).then((value) {
-        Navigator.popUntil(context, (route) => route.isFirst);
-      });
-    }
-
-    _wasLoggedIn = snapshot.hasData;
-    return _wasLoggedIn ? Home() : UserAuth();
-  }
-
-  setUser(User user) async {
-    final box = Hive.box('snack_box');
-    final firestore = FirebaseFirestore.instance;
-    await box.put('uid', user.uid);
-
-    if (!box.containsKey('preference')) {
-      DocumentSnapshot docSnapshot =
-          await firestore.collection('users').doc(user.uid).get();
-      Map data = docSnapshot.data();
-      docSnapshot.metadata;
-      await box.put('preference',
-          data != null ? data['preference'] : 'no_valid_preference');
-      box.put('blocked', data != null ? data['blocked'] : []);
-    }
-
-    analytics.setUserId(user.uid);
-
-    // Refetch chat partners
-    CollectionReference collection = firestore.collection('chats');
-    List chatPartners = box.get('chat_partners', defaultValue: []);
-    if (chatPartners.length != 0)
-      return; // not the best method to determine if a user has re logged in, but it will work
-    QuerySnapshot snapshot =
-        await collection.where('members', arrayContains: user.uid).get();
-    List docs = snapshot.docs;
-    for (QueryDocumentSnapshot doc in docs) {
-      List members = doc.data()['members'];
-      members.removeWhere((element) => element == user.uid);
-      String id = members[0];
-      if (!chatPartners.contains(id)) chatPartners.add(id);
-    }
-    box.put('chat_partners', chatPartners);
+    return snapshot.hasData ? Home() : UserAuth();
   }
 }
