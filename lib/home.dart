@@ -37,7 +37,12 @@ class _HomeState extends State<Home> {
         box.put('preference', snapshot.data()['preference']);
       }
 
-      FirebaseMessaging().onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
+      String localToken = await FirebaseMessaging().getToken();
+      if (snapshot.data()['fcm'] != localToken)
+        docRef.update({'fcm': localToken});
+      FirebaseMessaging()
+          .onTokenRefresh
+          .listen((token) => docRef.update({'fcm': token}));
     };
     exec();
   }
