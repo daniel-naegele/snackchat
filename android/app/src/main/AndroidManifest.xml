@@ -7,6 +7,11 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Snack-Dating"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/android_notification_icon" />
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -31,9 +36,6 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
-            <meta-data
-                    android:name="com.google.firebase.messaging.default_notification_icon"
-                    android:resource="@mipmap/ic_notification" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
