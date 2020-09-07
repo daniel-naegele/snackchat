@@ -30,7 +30,8 @@ class _HomeState extends State<Home> {
           FirebaseFirestore.instance.collection('users');
       DocumentReference docRef = collection.doc(user.uid);
       DocumentSnapshot snapshot = await docRef.get();
-      if (snapshot.data == null) {
+      if (snapshot.data() == null ||
+          !snapshot.data().containsKey('preference')) {
         Future.delayed(Duration(milliseconds: 1550)).then((value) {
           if (ModalRoute.of(context).settings.name != '/user/preferences')
             Navigator.pushNamed(context, '/user/preferences');
@@ -42,9 +43,7 @@ class _HomeState extends State<Home> {
       String localToken = await messaging.getToken();
       if (snapshot.data()['fcm'] != localToken)
         docRef.update({'fcm': localToken});
-      messaging
-          .onTokenRefresh
-          .listen((token) => docRef.update({'fcm': token}));
+      messaging.onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
     };
     exec();
   }
