@@ -21,6 +21,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    FirebaseMessaging messaging = FirebaseMessaging();
+    messaging.requestNotificationPermissions();
     final exec = () async {
       User user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
@@ -37,10 +39,10 @@ class _HomeState extends State<Home> {
         box.put('preference', snapshot.data()['preference']);
       }
 
-      String localToken = await FirebaseMessaging().getToken();
+      String localToken = await messaging.getToken();
       if (snapshot.data()['fcm'] != localToken)
         docRef.update({'fcm': localToken});
-      FirebaseMessaging()
+      messaging
           .onTokenRefresh
           .listen((token) => docRef.update({'fcm': token}));
     };

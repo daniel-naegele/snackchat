@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -87,8 +88,10 @@ class Settings extends HookWidget {
             color: Colors.red,
             onPressed: () async {
               final box = Hive.box('snack_box');
-              await box.clear();
               FirebaseAnalytics().logEvent(name: "logout");
+              DocumentReference reference = FirebaseFirestore.instance.doc('/users/' + box.get('uid'));
+              await reference.update({'fcm': FieldValue.delete()});
+              await box.clear();
               await FirebaseAuth.instance.signOut();
               Navigator.pop(context);
             },

@@ -17,8 +17,7 @@ class Chat extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final uid = box.get('uid');
-    DocumentReference reference =
-        firestore.collection('chats').doc(chatId);
+    DocumentReference reference = firestore.collection('chats').doc(chatId);
     AsyncSnapshot snapshot = useStream(reference.snapshots());
     if (!snapshot.hasData) return Scaffold();
     DocumentSnapshot doc = snapshot.data;
@@ -32,7 +31,7 @@ class Chat extends HookWidget {
         title: Column(
           children: [
             Text(id),
-            if(preferences != null) Text(preferences[foreignIndex])
+            if (preferences != null) Text(preferences[foreignIndex])
           ],
         ),
         actions: [
@@ -42,14 +41,26 @@ class Chat extends HookWidget {
               icon: Icon(Icons.flag), onPressed: () => reportUser(id, context))
         ],
       ),
-      body: ListView.builder(
-        itemCount: messages.length + 2,
-        reverse: true,
-        itemBuilder: (context, i) {
-          if (i > 0 && i - 1 < messages.length)
-            return ChatMessage(messages.reversed.toList()[i - 1], uid);
-          if (i == messages.length + 1) return Disclaimer();
-          return Container(
+      body: Column(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: ListView.builder(
+                itemCount: messages.length + 1,
+                reverse: true,
+                itemBuilder: (context, i) {
+                  if (i == messages.length)
+                    return Disclaimer();
+                  else
+                    return ChatMessage(messages.reversed.toList()[i], uid);
+                },
+              ),
+            ),
+          ),
+          Container(
             height: 70,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -62,15 +73,20 @@ class Chat extends HookWidget {
               children: <Widget>[
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(16))
+                      ),
                       child: TextField(
                         autocorrect: true,
                         controller: controller,
                         style: TextStyle(fontSize: 20),
+                        decoration: new InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(left: 4)
+                        ),
                       ),
                     ),
                   ),
@@ -83,8 +99,8 @@ class Chat extends HookWidget {
                 )
               ],
             ),
-          );
-        },
+          )
+        ],
       ),
     );
   }
@@ -92,8 +108,7 @@ class Chat extends HookWidget {
   onSend(String uid) async {
     String text = controller.text;
     if (text == null || text == "") return;
-    DocumentReference reference =
-        firestore.collection('chats').doc(chatId);
+    DocumentReference reference = firestore.collection('chats').doc(chatId);
     List messages = [
       {
         'text': text,
@@ -359,7 +374,6 @@ class Shadow extends StatelessWidget {
     );
   }
 }
-
 
 String toDateString(Timestamp time) {
   final format = DateFormat('dd.MM.yy hh:mm');

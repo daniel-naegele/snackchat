@@ -40,6 +40,7 @@ class _LogInState extends State<LogIn> {
                     validator: (_) => validateEmailAddress(_),
                     onSaved: (_) => email = _.trim(),
                     autocorrect: false,
+                    autofillHints: [AutofillHints.email],
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.email),
                       border: border,
@@ -52,6 +53,7 @@ class _LogInState extends State<LogIn> {
                     onSaved: (_) => password = _.trim(),
                     autocorrect: false,
                     obscureText: true,
+                    autofillHints: [AutofillHints.password],
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.vpn_key),
                       labelText: 'Password',
@@ -234,7 +236,6 @@ class _LogInState extends State<LogIn> {
     } else {
       await reference.update({'fcm': token});
     }
-    if(Platform.isIOS) await messaging.requestNotificationPermissions();
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');
