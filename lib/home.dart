@@ -18,6 +18,17 @@ class _HomeState extends State<Home> {
   bool _complementary = false;
   Widget _body = Matches(false);
 
+  bool isCurrent(String routeName) {
+    bool isCurrent = false;
+    Navigator.popUntil(context, (route) {
+      if (route.settings.name == routeName) {
+        isCurrent = true;
+      }
+      return true;
+    });
+    return isCurrent;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -26,14 +37,15 @@ class _HomeState extends State<Home> {
     final exec = () async {
       User user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
+      await user.reload();
       CollectionReference collection =
           FirebaseFirestore.instance.collection('users');
       DocumentReference docRef = collection.doc(user.uid);
       DocumentSnapshot snapshot = await docRef.get();
       if (snapshot.data() == null ||
           !snapshot.data().containsKey('preference')) {
-        Future.delayed(Duration(milliseconds: 1550)).then((value) {
-          if (ModalRoute.of(context).settings.name != '/user/preferences')
+        Future.delayed(Duration(milliseconds: 1000)).then((value) {
+          if (!isCurrent('/user/preferences'))
             Navigator.pushNamed(context, '/user/preferences');
         });
       } else {
@@ -41,7 +53,7 @@ class _HomeState extends State<Home> {
       }
 
       String localToken = await messaging.getToken();
-      if (snapshot.data()['fcm'] != localToken)
+      if (snapshot.data() != null && snapshot.data()['fcm'] != localToken)
         docRef.update({'fcm': localToken});
       messaging.onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
     };

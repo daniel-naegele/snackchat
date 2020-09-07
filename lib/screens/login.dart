@@ -228,6 +228,11 @@ class _LogInState extends State<LogIn> {
           data != null ? data['preference'] : 'no_valid_preference');
       box.put('blocked', data != null ? data['blocked'] : []);
     }
+    Navigator.pop(context);
+    if (!hasPreference)
+      Navigator.pushReplacementNamed(context, '/user/preferences');
+    else
+      popUntilRoot();
 
     analytics.setUserId(user.uid);
     String token = await messaging.getToken();
@@ -250,12 +255,6 @@ class _LogInState extends State<LogIn> {
       if (!chatPartners.contains(id)) chatPartners.add(id);
     }
     box.put('chat_partners', chatPartners);
-
-    Navigator.pop(context);
-    if (!hasPreference)
-      Navigator.pushReplacementNamed(context, '/user/preferences');
-    else
-      popUntilRoot();
   }
 
   showFailureDialog(String title, String content) {

@@ -81,7 +81,7 @@ class _SnackPreferenceState extends State<SnackPreference> {
                     analytics.setUserProperty(
                         name: 'preference', value: preference);
                     analytics.logEvent(name: "set_preference");
-                    Navigator.pop(context);
+                    Navigator.popUntil(context, (route) => route.settings.name == '/');
                   },
                 ),
               ],

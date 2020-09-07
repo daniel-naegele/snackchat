@@ -31,7 +31,8 @@ class Settings extends HookWidget {
           title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 22)),
         ),
         ListTile(
-          title: Text('Snack-Präferenz: $preference', style: TextStyle(fontSize: 22)),
+          title: Text('Snack-Präferenz: $preference',
+              style: TextStyle(fontSize: 22)),
         ),
 //        RaisedButton(
 //          color: Colors.red,
@@ -53,7 +54,7 @@ class Settings extends HookWidget {
         ListTile(
           leading: Icon(Icons.contact_mail),
           title: Text('Impressum', style: TextStyle(fontSize: 24)),
-          onTap:  () {
+          onTap: () {
             FirebaseAnalytics().logEvent(name: "open_imprint");
             Navigator.pushNamed(context, '/imprint');
           },
@@ -89,8 +90,11 @@ class Settings extends HookWidget {
             onPressed: () async {
               final box = Hive.box('snack_box');
               FirebaseAnalytics().logEvent(name: "logout");
-              DocumentReference reference = FirebaseFirestore.instance.doc('/users/' + box.get('uid'));
-              await reference.update({'fcm': FieldValue.delete()});
+              DocumentReference reference =
+                  FirebaseFirestore.instance.doc('/users/' + box.get('uid'));
+              bool stillExists = (await reference.get()).exists;
+              if (stillExists)
+                await reference.update({'fcm': FieldValue.delete()});
               await box.clear();
               await FirebaseAuth.instance.signOut();
               Navigator.pop(context);
