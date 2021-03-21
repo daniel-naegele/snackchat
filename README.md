@@ -1,5 +1,5 @@
 # snack_dating
-[![Codemagic build status](https://api.codemagic.io/apps/5f33b0f9beb12c284d4bd384/5f33b0f9beb12c284d4bd383/status_badge.svg)](https://codemagic.io/apps/5f33b0f9beb12c284d4bd384/5f33b0f9beb12c284d4bd383/latest_build)
+[![Codemagic build status](https://api.codemagic.io/apps/5f33b0f9beb12c284d4bd384/5f33b0f9beb12c284d4bd383/status_badge.svg)](https://codemagic.io/apps/5f33b0f9beb12c284d4bd384/5f33b0f9beb12c284d4bd383/latest_build) ![Time spent on this project](https://time.naegele.dev/badge/svg/41359a4b-0177-4007-b394-f5239410279e?days=900)
 
 A dating app purely based on snack preferences
 
