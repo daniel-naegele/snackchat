@@ -20,10 +20,10 @@ class Chat extends HookWidget {
     DocumentReference reference = firestore.collection('chats').doc(chatId);
     AsyncSnapshot snapshot = useStream(reference.snapshots(), initialData: null);
     if (!snapshot.hasData) return Scaffold();
-    DocumentSnapshot doc = snapshot.data;
-    List messages = doc.data()['messages'] ?? [];
-    List members = doc.data()['members'];
-    List preferences = doc.data()['preferences'];
+    Map<String, dynamic> data = snapshot.data.data();
+    List messages = data['messages'] ?? [];
+    List members = data['members'];
+    List preferences = data['preferences'];
     int foreignIndex = members.indexOf(uid) == 0 ? 1 : 0;
     String id = members[foreignIndex];
     return Scaffold(

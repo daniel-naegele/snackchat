@@ -93,8 +93,12 @@ class Settings extends HookWidget {
               DocumentReference reference =
                   FirebaseFirestore.instance.doc('/users/' + box.get('uid'));
               bool stillExists = (await reference.get()).exists;
-              if (stillExists)
-                await reference.update({'fcm': FieldValue.delete()});
+              if (user.isAnonymous) {
+                await reference.delete();
+              } else {
+                if (stillExists)
+                  await reference.update({'fcm': FieldValue.delete()});
+              }
               await box.clear();
               await FirebaseAuth.instance.signOut();
               Navigator.pop(context);

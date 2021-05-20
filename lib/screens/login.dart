@@ -247,7 +247,8 @@ class _LogInState extends State<LogIn> {
         await collection.where('members', arrayContains: user.uid).get();
     List docs = snapshot.docs;
     for (QueryDocumentSnapshot doc in docs) {
-      List members = doc.data()['members'];
+      Map<String, dynamic> data = doc.data();
+      List members =data['members'];
       members.removeWhere((element) => element == user.uid);
       String id = members[0];
       if (!chatPartners.contains(id)) chatPartners.add(id);

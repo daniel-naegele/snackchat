@@ -42,18 +42,19 @@ class _HomeState extends State<Home> {
           FirebaseFirestore.instance.collection('users');
       DocumentReference docRef = collection.doc(user.uid);
       DocumentSnapshot snapshot = await docRef.get();
-      if (snapshot.data() == null ||
-          !snapshot.data().containsKey('preference')) {
+      Map<String, dynamic> data = snapshot.data();
+      if (data == null ||
+          !data.containsKey('preference')) {
         Future.delayed(Duration(milliseconds: 1000)).then((value) {
           if (!isCurrent('/user/preferences'))
             Navigator.pushNamed(context, '/user/preferences');
         });
       } else {
-        box.put('preference', snapshot.data()['preference']);
+        box.put('preference', data['preference']);
       }
 
       String localToken = await messaging.getToken();
-      if (snapshot.data() != null && snapshot.data()['fcm'] != localToken)
+      if (snapshot.data() != null && data['fcm'] != localToken)
         docRef.update({'fcm': localToken});
       messaging.onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
     };

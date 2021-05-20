@@ -60,7 +60,9 @@ class Matches extends HookWidget {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
     String id = doc.id;
-    String preference = doc.data()['preference'];
+
+    Map<String, dynamic> data = doc.data();
+    String preference = data['preference'];
     return ListTile(
       leading: Icon(Icons.account_circle),
       title: Text(id),
