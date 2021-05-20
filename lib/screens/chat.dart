@@ -12,7 +12,7 @@ class Chat extends HookWidget {
   final TextEditingController controller = TextEditingController();
   final analytics = FirebaseAnalytics();
 
-  Chat(this.chatId, {Key key}) : super(key: key);
+  Chat(this.chatId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -177,12 +177,12 @@ class Chat extends HookWidget {
         title: Text(title),
         content: Text(body),
         actions: [
-          RaisedButton(
+          ElevatedButton(
             child: Text(buttonText),
-            color: Colors.red,
-            onPressed: callback,
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+            onPressed: () =>  callback(),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Abbrechen'),
             onPressed: () {
               Navigator.pop(context);
@@ -215,7 +215,7 @@ class ChatMessage extends StatelessWidget {
   final Map message;
   final String uid; // own uid
 
-  const ChatMessage(this.message, this.uid, {Key key}) : super(key: key);
+  const ChatMessage(this.message, this.uid, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +229,7 @@ class ChatMessage extends StatelessWidget {
 class OwnChatMessage extends StatelessWidget {
   final Map message;
 
-  const OwnChatMessage({Key key, this.message}) : super(key: key);
+  const OwnChatMessage({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +270,7 @@ class OwnChatMessage extends StatelessWidget {
 class ForeignChatMessage extends StatelessWidget {
   final Map message;
 
-  const ForeignChatMessage({Key key, this.message}) : super(key: key);
+  const ForeignChatMessage({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -333,7 +333,7 @@ class Outline extends StatelessWidget {
   final Widget child;
   final Color color;
 
-  Outline({this.child, this.color});
+  Outline({required this.child, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -356,7 +356,7 @@ class Outline extends StatelessWidget {
 class Shadow extends StatelessWidget {
   final Widget child;
 
-  Shadow({this.child});
+  Shadow({required this.child});
 
   @override
   Widget build(BuildContext context) {

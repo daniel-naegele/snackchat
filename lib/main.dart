@@ -21,10 +21,6 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('snack_box');
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  var token = await messaging.getToken(
-      vapidKey:
-          "BOpT7H4ZzDw9DAEP1iZMFg_Z1zVNW47Okvb3oPX-e0iAO5YdoQd1SjYoM2Tx-1fsaYbXkOLihvJdNIiRFaOjggA");
-
 
   await messaging.setAutoInitEnabled(true);
   await messaging.subscribeToTopic('all');
@@ -53,7 +49,7 @@ class SnackDatingApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
             builder: (context) {
-              return Chat(settings.name.split('/')[2]);
+              return Chat(settings.name!.split('/')[2]);
             },
             settings: settings);
       },
@@ -67,8 +63,8 @@ class SnackDatingMain extends HookWidget {
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
-    AsyncSnapshot<User> snapshot =
-        useStream(auth.authStateChanges(), initialData: null);
+    Stream<User?> authStream = auth.authStateChanges();
+    AsyncSnapshot<User?> snapshot = useStream(authStream , initialData: null);
 
     return snapshot.hasData ? Home() : UserAuth();
   }

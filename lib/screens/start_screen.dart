@@ -17,7 +17,7 @@ class UserAuth extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 64, left: 32, right: 32),
               child: Outline(
                 color: Colors.amberAccent,
-                child: FlatButton(
+                child: TextButton(
                   onPressed: () => Navigator.pushNamed(context, '/eula'),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -37,7 +37,7 @@ class UserAuth extends StatelessWidget {
 class SnackPhoto extends StatelessWidget {
   final String name;
 
-  const SnackPhoto(this.name, {Key key}) : super(key: key);
+  const SnackPhoto(this.name, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class BgPhotos extends StatefulWidget {
 
 class _BgPhotosState extends State<BgPhotos> {
   final PageController _controller = PageController();
-  Timer _timer;
+  late Timer _timer;
 
   List photos = [
     SnackPhoto('assets/snack0.jpg'),

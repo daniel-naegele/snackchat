@@ -17,16 +17,16 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.1.0+13
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  flutter_hooks: 0.16.0
+  flutter_hooks: ^0.17.0
   neuomorphic_container: 2.0.3
   back_button_interceptor: 5.0.0
-  hive: 2.0.0
+  hive: ^2.0.4
   hive_flutter: ^1.0.0
   intl: ^0.17.0
 

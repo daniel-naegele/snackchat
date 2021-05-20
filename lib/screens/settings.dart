@@ -18,8 +18,10 @@ class Settings extends HookWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: RaisedButton(
-            color: Colors.red,
+          child: ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+            ),
             child: Text(
               'Ausloggen',
               style: TextStyle(color: Colors.white, fontSize: 24),
@@ -72,7 +74,8 @@ class Settings extends HookWidget {
   }
 
   logOut(BuildContext context) {
-    User user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
     String content = 'Willst du dich wirklich ausloggen?';
     if (user.isAnonymous) {
       content +=
@@ -84,9 +87,11 @@ class Settings extends HookWidget {
         title: Text('Ausloggen bestätigen'),
         content: Text(content),
         actions: [
-          RaisedButton(
+          ElevatedButton(
             child: Text('Ausloggen'),
-            color: Colors.red,
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+            ),
             onPressed: () async {
               final box = Hive.box('snack_box');
               FirebaseAnalytics().logEvent(name: "logout");
@@ -104,7 +109,7 @@ class Settings extends HookWidget {
               Navigator.pop(context);
             },
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Abbrechen'),
             onPressed: () {
               Navigator.pop(context);

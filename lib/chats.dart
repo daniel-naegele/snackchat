@@ -24,7 +24,7 @@ class Chats extends HookWidget {
     List<QueryDocumentSnapshot> documents = []..addAll(querySnapshot.docs);
 
     documents.removeWhere((element) {
-      Map<String, dynamic> data = element.data();
+      Map<String, dynamic> data = element.data() as Map<String, dynamic>;
       return blocked.contains(getOtherUser(data['members']));
     });
 
@@ -48,7 +48,7 @@ class Chats extends HookWidget {
 
   Widget _buildTile(
       BuildContext context, int i, List<DocumentSnapshot> documents) {
-    Map<String, dynamic> data = documents[i].data();
+    Map<String, dynamic> data = documents[i].data() as Map<String, dynamic>;
     List messages = data['messages'];
     return ListTile(
       leading: Icon(Icons.chat_bubble),

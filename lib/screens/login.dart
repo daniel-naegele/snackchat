@@ -20,7 +20,7 @@ class _LogInState extends State<LogIn> {
   final messaging = FirebaseMessaging.instance;
   final firestore = FirebaseFirestore.instance;
 
-  String email, password;
+  String? email, password;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,8 @@ class _LogInState extends State<LogIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFormField(
-                    validator: (_) => validateEmailAddress(_),
-                    onSaved: (_) => email = _.trim(),
+                    validator: (_) => validateEmailAddress(_!),
+                    onSaved: (_) => email = _!.trim(),
                     autocorrect: false,
                     autofillHints: [AutofillHints.email],
                     decoration: InputDecoration(
@@ -47,8 +47,8 @@ class _LogInState extends State<LogIn> {
                   ),
                   SizedBox(height: 8),
                   TextFormField(
-                    validator: (_) => validatePassword(_),
-                    onSaved: (_) => password = _.trim(),
+                    validator: (_) => validatePassword(_!),
+                    onSaved: (_) => password = _!.trim(),
                     autocorrect: false,
                     obscureText: true,
                     autofillHints: [AutofillHints.password],
@@ -66,19 +66,22 @@ class _LogInState extends State<LogIn> {
                     children: [
                       Outline(
                         color: Colors.yellow,
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: signIn,
-                          child:
-                              Text('Sign In', style: TextStyle(fontSize: 18)),
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
                       ),
                       Outline(
                         color: Colors.grey,
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: register,
-                          child: Text('Register',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18)),
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                         ),
                       ),
                     ],
@@ -97,15 +100,17 @@ class _LogInState extends State<LogIn> {
                   const SizedBox(height: 16),
                   Outline(
                     color: Colors.blue,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: signInAnon,
-                      child: Text('Sign In Anonymously',
-                          style: TextStyle(color: Colors.white, fontSize: 18)),
+                      child: Text(
+                        'Sign In Anonymously',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
                     ),
                   ),
                   Outline(
                     color: Colors.white,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: signInWithGoogle,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -132,19 +137,19 @@ class _LogInState extends State<LogIn> {
     showLoading();
     await auth.signInAnonymously();
     analytics.logSignUp(signUpMethod: "anonymous");
-    await setUser(auth.currentUser);
+    await setUser(auth.currentUser!);
   }
 
   signIn() async {
-    FormState state = _key.currentState;
-    if (!state.validate()) return;
+    FormState? state = _key.currentState;
+    if (state == null || !state.validate()) return;
     state.save();
 
     showLoading();
     try {
-      await auth.signInWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email!, password: password!);
       analytics.logLogin(loginMethod: 'email');
-      setUser(auth.currentUser);
+      setUser(auth.currentUser!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-disabled') {
         showFailureDialog('Benutzer deaktiviert',
@@ -163,16 +168,16 @@ class _LogInState extends State<LogIn> {
   }
 
   register() async {
-    FormState state = _key.currentState;
-    if (!state.validate()) return;
+    FormState? state = _key.currentState;
+    if (state == null || !state.validate()) return;
     state.save();
 
     showLoading();
     try {
       await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: email!, password: password!);
       analytics.logSignUp(signUpMethod: 'email');
-      setUser(auth.currentUser);
+      setUser(auth.currentUser!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         showFailureDialog(
@@ -190,14 +195,14 @@ class _LogInState extends State<LogIn> {
   signInWithGoogle() async {
     showLoading();
     // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+        await googleUser!.authentication;
 
     // Create a new credential
-    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+    final OAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
@@ -205,7 +210,7 @@ class _LogInState extends State<LogIn> {
     // Once signed in, return the UserCredential
     await auth.signInWithCredential(credential);
     analytics.logSignUp(signUpMethod: 'google');
-    setUser(auth.currentUser);
+    setUser(auth.currentUser!);
   }
 
   popUntilRoot() =>
@@ -220,12 +225,15 @@ class _LogInState extends State<LogIn> {
 
     bool hasPreference = true;
     if (!box.containsKey('preference')) {
-      Map data = docSnapshot.data();
+            Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
+
       hasPreference = data != null;
       await box.put('preference',
           data != null ? data['preference'] : 'no_valid_preference');
       box.put('blocked', data != null ? data['blocked'] : []);
+
     }
+
     Navigator.pop(context);
     if (!hasPreference)
       Navigator.pushReplacementNamed(context, '/user/preferences');
@@ -233,7 +241,7 @@ class _LogInState extends State<LogIn> {
       popUntilRoot();
 
     analytics.setUserId(user.uid);
-    String token = await messaging.getToken();
+    String? token = await messaging.getToken();
     if (!docSnapshot.exists) {
       await reference.set({'fcm': token});
     } else {
@@ -247,8 +255,8 @@ class _LogInState extends State<LogIn> {
         await collection.where('members', arrayContains: user.uid).get();
     List docs = snapshot.docs;
     for (QueryDocumentSnapshot doc in docs) {
-      Map<String, dynamic> data = doc.data();
-      List members =data['members'];
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      List members = data['members'];
       members.removeWhere((element) => element == user.uid);
       String id = members[0];
       if (!chatPartners.contains(id)) chatPartners.add(id);
@@ -264,7 +272,7 @@ class _LogInState extends State<LogIn> {
         title: Text(title),
         content: Text(content),
         actions: [
-          FlatButton(onPressed: () => Navigator.pop(context), child: Text('Ok'))
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('Ok'))
         ],
       ),
     );
@@ -288,7 +296,7 @@ final border = OutlineInputBorder(
   borderRadius: BorderRadius.circular(7),
 );
 
-String validateEmailAddress(String input) {
+String? validateEmailAddress(String input) {
   const emailRegex =
       r"""^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""";
   if (!RegExp(emailRegex).hasMatch(input.trim()) || input.trim().isEmpty) {
@@ -298,7 +306,7 @@ String validateEmailAddress(String input) {
   }
 }
 
-String validatePassword(String input) {
+String? validatePassword(String input) {
   if (input.trim().length <= 6) {
     return "Bitte gebe ein längeres Passwort an";
   } else {

@@ -7,6 +7,8 @@ import 'package:snack_dating/chats.dart';
 import 'package:snack_dating/matches.dart';
 import 'package:snack_dating/screens/settings.dart' as settings;
 
+import 'db_schema/user.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -35,26 +37,30 @@ class _HomeState extends State<Home> {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     messaging.requestPermission();
     final exec = () async {
-      User user = FirebaseAuth.instance.currentUser;
+      User? user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
       await user.reload();
-      CollectionReference collection =
-          FirebaseFirestore.instance.collection('users');
-      DocumentReference docRef = collection.doc(user.uid);
-      DocumentSnapshot snapshot = await docRef.get();
-      Map<String, dynamic> data = snapshot.data();
-      if (data == null ||
-          !data.containsKey('preference')) {
+      final collection =
+          FirebaseFirestore.instance.collection('users').withConverter(
+                fromFirestore: (snapshot, _) =>
+                    SnackUser.fromJson(snapshot.data()!),
+                toFirestore: (SnackUser snackUser, _) => snackUser.toJson(),
+              );
+
+      final docRef = collection.doc(user.uid);
+      final snapshot = await docRef.get();
+      final snackUser = snapshot.data();
+      if (snackUser == null || snackUser.preference != null) {
         Future.delayed(Duration(milliseconds: 1000)).then((value) {
           if (!isCurrent('/user/preferences'))
             Navigator.pushNamed(context, '/user/preferences');
         });
       } else {
-        box.put('preference', data['preference']);
+        box.put('preference', snackUser.preference);
       }
 
-      String localToken = await messaging.getToken();
-      if (snapshot.data() != null && data['fcm'] != localToken)
+      String? localToken = await messaging.getToken();
+      if (snapshot.data() != null && snackUser!.fcm != localToken)
         docRef.update({'fcm': localToken});
       messaging.onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
     };
@@ -80,15 +86,15 @@ class _HomeState extends State<Home> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            title: Text("Matches"),
+            label: "Matches",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            title: Text("Chats"),
+            label: "Chats",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            title: Text("Einstellungen"),
+            label: "Einstellungen",
           ),
         ],
       ),
