@@ -57,15 +57,21 @@ class SnackDatingApp extends StatelessWidget {
   }
 }
 
-class SnackDatingMain extends HookWidget {
+class SnackDatingMain extends StatelessWidget {
   final analytics = FirebaseAnalytics();
 
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
     Stream<User?> authStream = auth.authStateChanges();
-    AsyncSnapshot<User?> snapshot = useStream(authStream , initialData: null);
 
-    return snapshot.hasData ? Home() : UserAuth();
+    // AsyncSnapshot<User?> snapshot = useStream(authStream , initialData: null);
+    //
+    // return snapshot.hasData ? Home() : UserAuth();
+
+    // Use StreamBuilder as flutter_hooks is broken https://github.com/rrousselGit/flutter_hooks/pull/246
+    return StreamBuilder(builder: (context, AsyncSnapshot<User?> snapshot) {
+      return snapshot.hasData ? Home() : UserAuth();
+    }, stream: authStream);
   }
 }
