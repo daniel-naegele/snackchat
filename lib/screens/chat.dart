@@ -12,18 +12,18 @@ class Chat extends HookWidget {
   final TextEditingController controller = TextEditingController();
   final analytics = FirebaseAnalytics();
 
-  Chat(this.chatId, {Key key}) : super(key: key);
+  Chat(this.chatId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final uid = box.get('uid');
     DocumentReference reference = firestore.collection('chats').doc(chatId);
-    AsyncSnapshot snapshot = useStream(reference.snapshots());
+    AsyncSnapshot snapshot = useStream(reference.snapshots(), initialData: null);
     if (!snapshot.hasData) return Scaffold();
-    DocumentSnapshot doc = snapshot.data;
-    List messages = doc.data()['messages'] ?? [];
-    List members = doc.data()['members'];
-    List preferences = doc.data()['preferences'];
+    Map<String, dynamic> data = snapshot.data.data();
+    List messages = data['messages'] ?? [];
+    List members = data['members'];
+    List preferences = data['preferences'];
     int foreignIndex = members.indexOf(uid) == 0 ? 1 : 0;
     String id = members[foreignIndex];
     return Scaffold(
@@ -76,17 +76,15 @@ class Chat extends HookWidget {
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(16))
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(16))),
                       child: TextField(
                         autocorrect: true,
                         controller: controller,
                         style: TextStyle(fontSize: 20),
                         decoration: new InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 4)
-                        ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 4)),
                       ),
                     ),
                   ),
@@ -175,16 +173,16 @@ class Chat extends HookWidget {
       BuildContext context, Function callback) {
     showDialog(
       context: context,
-      child: AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         title: Text(title),
         content: Text(body),
         actions: [
-          RaisedButton(
+          ElevatedButton(
             child: Text(buttonText),
-            color: Colors.red,
-            onPressed: callback,
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+            onPressed: () =>  callback(),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Abbrechen'),
             onPressed: () {
               Navigator.pop(context);
@@ -199,7 +197,7 @@ class Chat extends HookWidget {
   showSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
-      child: SimpleDialog(children: [
+      builder: (BuildContext context) => SimpleDialog(children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
@@ -217,7 +215,7 @@ class ChatMessage extends StatelessWidget {
   final Map message;
   final String uid; // own uid
 
-  const ChatMessage(this.message, this.uid, {Key key}) : super(key: key);
+  const ChatMessage(this.message, this.uid, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +229,7 @@ class ChatMessage extends StatelessWidget {
 class OwnChatMessage extends StatelessWidget {
   final Map message;
 
-  const OwnChatMessage({Key key, this.message}) : super(key: key);
+  const OwnChatMessage({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +270,7 @@ class OwnChatMessage extends StatelessWidget {
 class ForeignChatMessage extends StatelessWidget {
   final Map message;
 
-  const ForeignChatMessage({Key key, this.message}) : super(key: key);
+  const ForeignChatMessage({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -335,7 +333,7 @@ class Outline extends StatelessWidget {
   final Widget child;
   final Color color;
 
-  Outline({this.child, this.color});
+  Outline({required this.child, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +356,7 @@ class Outline extends StatelessWidget {
 class Shadow extends StatelessWidget {
   final Widget child;
 
-  Shadow({this.child});
+  Shadow({required this.child});
 
   @override
   Widget build(BuildContext context) {

@@ -5,8 +5,8 @@ class Heading extends StatelessWidget {
   final TextStyle style;
 
   const Heading(
-      {Key key,
-      this.text,
+      {Key? key,
+      required this.text,
       this.style = const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)})
       : super(key: key);
 
@@ -27,8 +27,8 @@ class SubHeading extends StatelessWidget {
   final TextStyle style;
 
   const SubHeading(
-      {Key key,
-      this.text,
+      {Key? key,
+      required this.text,
       this.style = const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)})
       : super(key: key);
 
@@ -49,7 +49,7 @@ class Paragraph extends StatelessWidget {
   final TextStyle style;
 
   const Paragraph(
-      {Key key, this.text, this.style = const TextStyle(fontSize: 16)})
+      {Key? key, required this.text, this.style = const TextStyle(fontSize: 16)})
       : super(key: key);
 
   @override
@@ -68,7 +68,7 @@ class Outline extends StatelessWidget {
   final Widget child;
   final Color color;
 
-  Outline({this.child, this.color});
+  Outline({required this.child, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class Outline extends StatelessWidget {
 class Shadow extends StatelessWidget {
   final Widget child;
 
-  Shadow({this.child});
+  Shadow({required this.child});
 
   @override
   Widget build(BuildContext context) {

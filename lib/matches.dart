@@ -12,7 +12,7 @@ class Matches extends HookWidget {
   final firestore = FirebaseFirestore.instance;
   final box = Hive.box('snack_box');
 
-  Matches(this.complementary, {Key key}) : super(key: key);
+  Matches(this.complementary, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +23,17 @@ class Matches extends HookWidget {
       preference = preference.split('').reversed.join();
     }
 
-    if (preference == null || preference == '') {
+    if (preference == '') {
       preference = "no_valid_preference";
     }
 
     CollectionReference collection = firestore.collection('users');
     AsyncSnapshot snapshot = useStream(
-        collection.where('preference', isEqualTo: preference).snapshots());
+        collection.where('preference', isEqualTo: preference).snapshots(), initialData: null);
 
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;
-    List<QueryDocumentSnapshot> documents = List()..addAll(querySnapshot.docs);
+    List<QueryDocumentSnapshot> documents = []..addAll(querySnapshot.docs);
     documents.removeWhere((doc) => doc.id == uid);
     documents.removeWhere((doc) => chatPartners.contains(doc.id));
 
@@ -60,7 +60,9 @@ class Matches extends HookWidget {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
     String id = doc.id;
-    String preference = doc.data()['preference'];
+
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    String preference = data['preference'];
     return ListTile(
       leading: Icon(Icons.account_circle),
       title: Text(id),
@@ -88,7 +90,7 @@ class FilterList extends StatelessWidget {
   final BoolCallback callback;
   final bool complementary;
 
-  const FilterList(this.callback, this.complementary, {Key key})
+  const FilterList(this.callback, this.complementary, {Key? key})
       : super(key: key);
 
   @override
@@ -105,7 +107,7 @@ class FilterList extends StatelessWidget {
         },
         icon: Icon(Icons.filter_list),
         initialValue: complementary,
-        onSelected: (val) => callback(val),
+        onSelected: (bool val) => callback(val),
       ),
     );
   }

@@ -10,17 +10,23 @@ class Chats extends HookWidget {
   Widget build(BuildContext context) {
     final uid = box.get('uid');
     List blocked = box.get('blocked') ?? [];
-    CollectionReference collection = FirebaseFirestore.instance.collection('chats');
-    AsyncSnapshot snapshot = useStream(collection
-        .where('members', arrayContains: uid)
-        .orderBy('last_message', descending: true)
-        .snapshots());
+    CollectionReference collection =
+        FirebaseFirestore.instance.collection('chats');
+    AsyncSnapshot snapshot = useStream(
+        collection
+            .where('members', arrayContains: uid)
+            .orderBy('last_message', descending: true)
+            .snapshots(),
+        initialData: null);
 
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;
-    List<QueryDocumentSnapshot> documents = List()..addAll(querySnapshot.docs);
+    List<QueryDocumentSnapshot> documents = []..addAll(querySnapshot.docs);
 
-    documents.removeWhere((element) => blocked.contains(getOtherUser(element.data()['members'])));
+    documents.removeWhere((element) {
+      Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+      return blocked.contains(getOtherUser(data['members']));
+    });
 
     if (documents.length == 0) {
       return Center(
@@ -42,13 +48,13 @@ class Chats extends HookWidget {
 
   Widget _buildTile(
       BuildContext context, int i, List<DocumentSnapshot> documents) {
-    DocumentSnapshot doc = documents[i];
-    List messages = doc.data()['messages'];
+    Map<String, dynamic> data = documents[i].data() as Map<String, dynamic>;
+    List messages = data['messages'];
     return ListTile(
       leading: Icon(Icons.chat_bubble),
-      title: Text(getOtherUser(doc.data()['members'])),
+      title: Text(getOtherUser(data['members'])),
       subtitle: Text(messages == null ? '' : messages.last['text']),
-      onTap: () => Navigator.pushNamed(context, '/chats/${doc.id}'),
+      onTap: () => Navigator.pushNamed(context, '/chats/${documents[i].id}'),
     );
   }
 

@@ -4,8 +4,8 @@ const iconSize = Size(24, 24);
 
 class OAuthIcon extends StatelessWidget {
   const OAuthIcon._({
-    Key key,
-    @required this.assetPath,
+    Key? key,
+    required this.assetPath,
     this.size = iconSize,
   }) : super(key: key);
 
