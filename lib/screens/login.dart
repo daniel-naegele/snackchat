@@ -67,6 +67,9 @@ class _LogInState extends State<LogIn> {
                       Outline(
                         color: Colors.yellow,
                         child: TextButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.all(16))),
                           onPressed: signIn,
                           child: Text(
                             'Sign In',
@@ -77,6 +80,9 @@ class _LogInState extends State<LogIn> {
                       Outline(
                         color: Colors.grey,
                         child: TextButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.all(16))),
                           onPressed: register,
                           child: Text(
                             'Register',
@@ -101,6 +107,9 @@ class _LogInState extends State<LogIn> {
                   Outline(
                     color: Colors.blue,
                     child: TextButton(
+                      style: ButtonStyle(
+                          padding:
+                              MaterialStateProperty.all(EdgeInsets.all(16))),
                       onPressed: signInAnon,
                       child: Text(
                         'Sign In Anonymously',
@@ -111,6 +120,9 @@ class _LogInState extends State<LogIn> {
                   Outline(
                     color: Colors.white,
                     child: TextButton(
+                      style: ButtonStyle(
+                          padding:
+                              MaterialStateProperty.all(EdgeInsets.all(16))),
                       onPressed: signInWithGoogle,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -225,13 +237,12 @@ class _LogInState extends State<LogIn> {
 
     bool hasPreference = true;
     if (!box.containsKey('preference')) {
-            Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
+      Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
 
       hasPreference = data != null;
       await box.put('preference',
           data != null ? data['preference'] : 'no_valid_preference');
       box.put('blocked', data != null ? data['blocked'] : []);
-
     }
 
     Navigator.pop(context);
@@ -241,12 +252,16 @@ class _LogInState extends State<LogIn> {
       popUntilRoot();
 
     analytics.setUserId(user.uid);
-    String? token = await messaging.getToken();
     if (!docSnapshot.exists) {
-      await reference.set({'fcm': token});
-    } else {
-      await reference.update({'fcm': token});
+      await reference.set({'fcm': ''});
     }
+    messaging
+        .getToken(
+            vapidKey:
+                'BOpT7H4ZzDw9DAEP1iZMFg_Z1zVNW47Okvb3oPX-e0iAO5YdoQd1SjYoM2Tx-1fsaYbXkOLihvJdNIiRFaOjggA')
+        .then((token) async {
+      await reference.update({'fcm': token});
+    }).onError((error, stackTrace)  {});
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');

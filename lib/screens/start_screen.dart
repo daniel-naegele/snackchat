@@ -42,20 +42,13 @@ class SnackPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 0,
-          sigmaY: 0,
-        ),
-        child: Image.asset(
-          name,
-          fit: BoxFit.cover,
-        ),
+      child: Image.asset(
+        name,
+        fit: BoxFit.cover,
       ),
     );
   }
 }
-
 
 class BgPhotos extends StatefulWidget {
   @override
@@ -66,7 +59,7 @@ class _BgPhotosState extends State<BgPhotos> {
   final PageController _controller = PageController();
   late Timer _timer;
 
-  List photos = [
+  List<SnackPhoto> photos = [
     SnackPhoto('assets/snack0.jpg'),
     SnackPhoto('assets/snack1.jpg'),
     SnackPhoto('assets/snack2.jpg'),

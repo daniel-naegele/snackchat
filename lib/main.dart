@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +15,7 @@ import 'package:snack_dating/screens/login.dart';
 import 'package:snack_dating/screens/settings.dart';
 import 'package:snack_dating/screens/snack_preference.dart';
 import 'package:snack_dating/screens/start_screen.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +26,9 @@ void main() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   await messaging.setAutoInitEnabled(true);
-  await messaging.subscribeToTopic('all');
+  if (!kIsWeb) {
+    await messaging.subscribeToTopic('all');
+  }
   runApp(SnackDatingApp());
 }
 
@@ -70,8 +75,10 @@ class SnackDatingMain extends StatelessWidget {
     // return snapshot.hasData ? Home() : UserAuth();
 
     // Use StreamBuilder as flutter_hooks is broken https://github.com/rrousselGit/flutter_hooks/pull/246
-    return StreamBuilder(builder: (context, AsyncSnapshot<User?> snapshot) {
-      return snapshot.hasData ? Home() : UserAuth();
-    }, stream: authStream);
+    return StreamBuilder(
+        builder: (context, AsyncSnapshot<User?> snapshot) {
+          return snapshot.hasData ? Home() : UserAuth();
+        },
+        stream: authStream);
   }
 }
