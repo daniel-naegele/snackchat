@@ -32,8 +32,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging messaging = FirebaseMessaging();
-    messaging.requestNotificationPermissions();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    messaging.requestPermission();
     final exec = () async {
       User user = FirebaseAuth.instance.currentUser;
       if (user == null) return;

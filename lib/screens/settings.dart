@@ -80,7 +80,7 @@ class Settings extends HookWidget {
     }
     showDialog(
       context: context,
-      child: AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         title: Text('Ausloggen bestätigen'),
         content: Text(content),
         actions: [

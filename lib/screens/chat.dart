@@ -18,7 +18,7 @@ class Chat extends HookWidget {
   Widget build(BuildContext context) {
     final uid = box.get('uid');
     DocumentReference reference = firestore.collection('chats').doc(chatId);
-    AsyncSnapshot snapshot = useStream(reference.snapshots());
+    AsyncSnapshot snapshot = useStream(reference.snapshots(), initialData: null);
     if (!snapshot.hasData) return Scaffold();
     DocumentSnapshot doc = snapshot.data;
     List messages = doc.data()['messages'] ?? [];
@@ -76,17 +76,15 @@ class Chat extends HookWidget {
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(16))
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(16))),
                       child: TextField(
                         autocorrect: true,
                         controller: controller,
                         style: TextStyle(fontSize: 20),
                         decoration: new InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 4)
-                        ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 4)),
                       ),
                     ),
                   ),
@@ -175,7 +173,7 @@ class Chat extends HookWidget {
       BuildContext context, Function callback) {
     showDialog(
       context: context,
-      child: AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         title: Text(title),
         content: Text(body),
         actions: [
@@ -199,7 +197,7 @@ class Chat extends HookWidget {
   showSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
-      child: SimpleDialog(children: [
+      builder: (BuildContext context) => SimpleDialog(children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(

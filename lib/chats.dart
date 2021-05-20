@@ -14,7 +14,7 @@ class Chats extends HookWidget {
     AsyncSnapshot snapshot = useStream(collection
         .where('members', arrayContains: uid)
         .orderBy('last_message', descending: true)
-        .snapshots());
+        .snapshots(), initialData: null);
 
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;

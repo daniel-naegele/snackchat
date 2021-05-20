@@ -29,7 +29,7 @@ class Matches extends HookWidget {
 
     CollectionReference collection = firestore.collection('users');
     AsyncSnapshot snapshot = useStream(
-        collection.where('preference', isEqualTo: preference).snapshots());
+        collection.where('preference', isEqualTo: preference).snapshots(), initialData: null);
 
     if (!snapshot.hasData) return Center(child: Text('Loading...'));
     QuerySnapshot querySnapshot = snapshot.data;

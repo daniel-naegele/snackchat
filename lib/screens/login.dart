@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +17,7 @@ class _LogInState extends State<LogIn> {
   final _key = GlobalKey<FormState>();
   final analytics = FirebaseAnalytics();
   final auth = FirebaseAuth.instance;
-  final messaging = FirebaseMessaging();
+  final messaging = FirebaseMessaging.instance;
   final firestore = FirebaseFirestore.instance;
 
   String email, password;
@@ -261,7 +259,7 @@ class _LogInState extends State<LogIn> {
     Navigator.pop(context);
     showDialog(
       context: context,
-      child: AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         title: Text(title),
         content: Text(content),
         actions: [
@@ -275,7 +273,7 @@ class _LogInState extends State<LogIn> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      child: Center(
+      builder: (BuildContext context) => Center(
         child: CircularProgressIndicator(
           valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
           backgroundColor: Colors.transparent,
