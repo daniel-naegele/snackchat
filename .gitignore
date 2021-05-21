@@ -46,3 +46,12 @@ app.*.map.json
 # Key management stuff
 android/key.jks
 android/key.properties
+
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc
+
+### Firebase Patch ###
+.runtimeconfig.json
+.firebase/
