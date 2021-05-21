@@ -30,6 +30,8 @@ dependencies:
   hive_flutter: ^1.0.0
   intl: ^0.17.0
 
+  algolia: ^1.0.1
+
   # Firebase
   firebase_analytics: ^8.1.0
   cloud_firestore: ^2.2.0
