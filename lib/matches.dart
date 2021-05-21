@@ -1,22 +1,24 @@
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
+import 'package:snack_dating/algolia_application.dart';
 
 typedef void BoolCallback(bool value);
 
-class Matches extends HookWidget {
+class Matches extends StatefulWidget {
   final bool complementary;
-  final firestore = FirebaseFirestore.instance;
-  final box = Hive.box('snack_box');
   late final preference;
   late final uid;
   late final chatPartners;
   late final CollectionReference<Map<String, Object?>> collection;
+  late final Future<List<Match>> matches;
 
   Matches(this.complementary) {
+    final box = Hive.box('snack_box');
     uid = box.get('uid');
     chatPartners = box.get('chat_partners', defaultValue: []);
 
@@ -32,20 +34,50 @@ class Matches extends HookWidget {
 
     preference = pref;
 
-    collection = firestore.collection('users');
+    collection = FirebaseFirestore.instance.collection('users');
+    matches = getMatches();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Center(child: Text('Loading...'));
-        QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
-        List<QueryDocumentSnapshot> documents = []..addAll(querySnapshot.docs);
-        documents.removeWhere((doc) => doc.id == uid);
-        documents.removeWhere((doc) => chatPartners.contains(doc.id));
+  _MatchesState createState() => _MatchesState();
 
-        if (documents.length == 0) {
+  Future<List<Match>> getMatches() async {
+    final snapshot =
+        await collection.where('preference', isEqualTo: preference).get();
+
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.docs;
+
+    if (documents.isNotEmpty) {
+      return documents.map((e) => Match(e.id, e.data()['preference'])).toList();
+    }
+
+    Algolia algolia = AlgoliaApplication.algolia;
+    final query = algolia.instance.index('preference').query(preference);
+
+    final snap = await query.getObjects();
+    return snap.hits
+        .map((e) => Match(e.objectID, e.data['preference']))
+        .toList();
+  }
+}
+
+class _MatchesState extends State<Matches> {
+  final firestore = FirebaseFirestore.instance;
+
+  final box = Hive.box('snack_box');
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot<List<Match>> snapshot) {
+        if (!snapshot.hasData) return Center(child: Text('Loading...'));
+        List<Match> matches = snapshot.data!;
+        final uid = box.get('uid');
+        matches.removeWhere((element) => element.uid == uid);
+        matches.removeWhere(
+            (element) => widget.chatPartners.contains(element.uid));
+
+        if (matches.length == 0) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -58,22 +90,18 @@ class Matches extends HookWidget {
           );
         }
         return ListView.builder(
-          itemCount: documents.length,
-          itemBuilder: (context, index) => _buildTile(context, index, documents),
+          itemCount: matches.length,
+          itemBuilder: (context, index) => _buildTile(context, index, matches),
         );
       },
-      stream: collection.where('preference', isEqualTo: preference).snapshots(),
+      future: widget.matches,
     );
   }
 
-  Widget _buildTile(
-      BuildContext context, int i, List<DocumentSnapshot> documents) {
-    final uid = box.get('uid');
-    DocumentSnapshot doc = documents[i];
-    String id = doc.id;
+  Widget _buildTile(BuildContext context, int i, List<Match> matches) {
+    final id = matches[i].uid;
+    final preference = matches[i].preference;
 
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    String preference = data['preference'];
     return ListTile(
       leading: Icon(Icons.account_circle),
       title: Text(id),
@@ -82,7 +110,7 @@ class Matches extends HookWidget {
         DocumentReference document =
             firestore.collection('chats').doc(); // Autogenerate the id
         await document.set({
-          'members': [uid, id],
+          'members': [widget.uid, id],
           'preferences': [box.get('preference'), preference],
           'last_message': DateTime.now(),
         });
@@ -92,6 +120,7 @@ class Matches extends HookWidget {
         chatPartners.add(id);
         box.put('chat_partners', chatPartners);
         Navigator.pushNamed(context, '/chats/${document.id}');
+        setState(() {});
       },
     );
   }
@@ -122,4 +151,10 @@ class FilterList extends StatelessWidget {
       ),
     );
   }
+}
+
+class Match {
+  final String uid, preference;
+
+  Match(this.uid, this.preference);
 }
