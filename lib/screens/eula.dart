@@ -84,13 +84,13 @@ class _EULAState extends State<EULA> {
             RadioListTile(
               value: 0,
               groupValue: _accepted,
-              onChanged: changeAccepted,
+              onChanged: (int? i) => changeAccepted(i!),
               title: Text('Decline'),
             ),
             RadioListTile(
               value: 1,
               groupValue: _accepted,
-              onChanged: changeAccepted,
+              onChanged: (int? i) => changeAccepted(i!),
               title: Text('Accept'),
             ),
             Outline(

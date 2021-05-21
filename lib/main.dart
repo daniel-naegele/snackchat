@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -14,15 +15,20 @@ import 'package:snack_dating/screens/login.dart';
 import 'package:snack_dating/screens/settings.dart';
 import 'package:snack_dating/screens/snack_preference.dart';
 import 'package:snack_dating/screens/start_screen.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   await Hive.initFlutter();
   await Hive.openBox('snack_box');
-  await Firebase.initializeApp();
-  FirebaseMessaging messaging = FirebaseMessaging();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   await messaging.setAutoInitEnabled(true);
-  await messaging.subscribeToTopic('all');
+  if (!kIsWeb) {
+    await messaging.subscribeToTopic('all');
+  }
   runApp(SnackDatingApp());
 }
 
@@ -47,23 +53,31 @@ class SnackDatingApp extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
-            builder: (context) {
-              return Chat(settings.name.split('/')[2]);
-            },
-            settings: settings);
+          builder: (context) {
+            return Chat(settings.name!.split('/')[2]);
+          },
+          settings: settings,
+        );
       },
     );
   }
 }
 
-class SnackDatingMain extends HookWidget {
+class SnackDatingMain extends StatelessWidget {
   final analytics = FirebaseAnalytics();
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    AsyncSnapshot<User> snapshot = useStream(auth.authStateChanges());
-
-    return snapshot.hasData ? Home() : UserAuth();
+    final box = Hive.box('snack_box');
+    return StreamBuilder(
+      builder: (context, AsyncSnapshot<BoxEvent> snapshot) {
+        if (!snapshot.hasData) return UserAuth();
+        if (snapshot.data!.deleted) return UserAuth();
+        String? uid = snapshot.data!.value;
+        if (uid == null || uid == '') return UserAuth();
+        return Home();
+      },
+      stream: box.watch(key: 'uid'),
+    );
   }
 }

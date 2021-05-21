@@ -11,47 +11,58 @@ class Matches extends HookWidget {
   final bool complementary;
   final firestore = FirebaseFirestore.instance;
   final box = Hive.box('snack_box');
+  late final preference;
+  late final uid;
+  late final chatPartners;
+  late final CollectionReference<Map<String, Object?>> collection;
 
-  Matches(this.complementary, {Key key}) : super(key: key);
+  Matches(this.complementary) {
+    uid = box.get('uid');
+    chatPartners = box.get('chat_partners', defaultValue: []);
+
+    String? pref = box.get('preference');
+
+    if (pref == null || pref == '') {
+      pref = "no_valid_preference";
+    }
+
+    if (complementary) {
+      pref = pref.split('').reversed.join();
+    }
+
+    preference = pref;
+
+    collection = firestore.collection('users');
+  }
 
   @override
   Widget build(BuildContext context) {
-    final uid = box.get('uid');
-    List chatPartners = box.get('chat_partners', defaultValue: []);
-    String preference = box.get('preference');
-    if (complementary) {
-      preference = preference.split('').reversed.join();
-    }
+    return StreamBuilder(
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return Center(child: Text('Loading...'));
+        QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
+        List<QueryDocumentSnapshot> documents = []..addAll(querySnapshot.docs);
+        documents.removeWhere((doc) => doc.id == uid);
+        documents.removeWhere((doc) => chatPartners.contains(doc.id));
 
-    if (preference == null || preference == '') {
-      preference = "no_valid_preference";
-    }
-
-    CollectionReference collection = firestore.collection('users');
-    AsyncSnapshot snapshot = useStream(
-        collection.where('preference', isEqualTo: preference).snapshots());
-
-    if (!snapshot.hasData) return Center(child: Text('Loading...'));
-    QuerySnapshot querySnapshot = snapshot.data;
-    List<QueryDocumentSnapshot> documents = List()..addAll(querySnapshot.docs);
-    documents.removeWhere((doc) => doc.id == uid);
-    documents.removeWhere((doc) => chatPartners.contains(doc.id));
-
-    if (documents.length == 0) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Keine Partner mit diesen Präferenzen wurden gefunden :c',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      );
-    }
-    return ListView.builder(
-      itemCount: documents.length,
-      itemBuilder: (context, index) => _buildTile(context, index, documents),
+        if (documents.length == 0) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Keine Partner mit diesen Präferenzen wurden gefunden :c',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+          );
+        }
+        return ListView.builder(
+          itemCount: documents.length,
+          itemBuilder: (context, index) => _buildTile(context, index, documents),
+        );
+      },
+      stream: collection.where('preference', isEqualTo: preference).snapshots(),
     );
   }
 
@@ -60,7 +71,9 @@ class Matches extends HookWidget {
     final uid = box.get('uid');
     DocumentSnapshot doc = documents[i];
     String id = doc.id;
-    String preference = doc.data()['preference'];
+
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    String preference = data['preference'];
     return ListTile(
       leading: Icon(Icons.account_circle),
       title: Text(id),
@@ -88,7 +101,7 @@ class FilterList extends StatelessWidget {
   final BoolCallback callback;
   final bool complementary;
 
-  const FilterList(this.callback, this.complementary, {Key key})
+  const FilterList(this.callback, this.complementary, {Key? key})
       : super(key: key);
 
   @override
@@ -105,7 +118,7 @@ class FilterList extends StatelessWidget {
         },
         icon: Icon(Icons.filter_list),
         initialValue: complementary,
-        onSelected: (val) => callback(val),
+        onSelected: (bool val) => callback(val),
       ),
     );
   }
