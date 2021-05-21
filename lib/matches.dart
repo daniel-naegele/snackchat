@@ -15,7 +15,7 @@ class Matches extends StatefulWidget {
   late final uid;
   late final chatPartners;
   late final CollectionReference<Map<String, Object?>> collection;
-  late final Future<List<Match>> matches;
+  late Future<List<Match>> matches;
 
   Matches(this.complementary) {
     final box = Hive.box('snack_box');
@@ -35,11 +35,18 @@ class Matches extends StatefulWidget {
     preference = pref;
 
     collection = FirebaseFirestore.instance.collection('users');
-    matches = getMatches();
+    matches = filter(getMatches());
   }
 
   @override
   _MatchesState createState() => _MatchesState();
+
+  Future<List<Match>> filter(Future<List<Match>> input) async {
+    List<Match> matches = await input;
+    matches.removeWhere((element) => element.uid == uid);
+    matches.removeWhere((element) => chatPartners.contains(element.uid));
+    return matches;
+  }
 
   Future<List<Match>> getMatches() async {
     final snapshot =
@@ -120,7 +127,11 @@ class _MatchesState extends State<Matches> {
         chatPartners.add(id);
         box.put('chat_partners', chatPartners);
         Navigator.pushNamed(context, '/chats/${document.id}');
-        setState(() {});
+        setState(() {
+          if (matches.length == 1) {
+            widget.matches = widget.filter(widget.getMatches());
+          }
+        });
       },
     );
   }
