@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/composition/components.dart';
 import 'package:snack_dating/composition/oauth_logos.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LogIn extends StatefulWidget {
   @override
@@ -67,6 +68,9 @@ class _LogInState extends State<LogIn> {
                       Outline(
                         color: Colors.yellow,
                         child: TextButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.all(16))),
                           onPressed: signIn,
                           child: Text(
                             'Sign In',
@@ -77,6 +81,9 @@ class _LogInState extends State<LogIn> {
                       Outline(
                         color: Colors.grey,
                         child: TextButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.all(16))),
                           onPressed: register,
                           child: Text(
                             'Register',
@@ -101,6 +108,9 @@ class _LogInState extends State<LogIn> {
                   Outline(
                     color: Colors.blue,
                     child: TextButton(
+                      style: ButtonStyle(
+                          padding:
+                              MaterialStateProperty.all(EdgeInsets.all(16))),
                       onPressed: signInAnon,
                       child: Text(
                         'Sign In Anonymously',
@@ -111,7 +121,11 @@ class _LogInState extends State<LogIn> {
                   Outline(
                     color: Colors.white,
                     child: TextButton(
-                      onPressed: signInWithGoogle,
+                      style: ButtonStyle(
+                          padding:
+                              MaterialStateProperty.all(EdgeInsets.all(16))),
+                      onPressed: () =>
+                          kIsWeb ? signInWithGoogleWeb() : signInWithGoogle(),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -192,6 +206,18 @@ class _LogInState extends State<LogIn> {
     }
   }
 
+  signInWithGoogleWeb() async {
+    showLoading();
+    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+    UserCredential credential =
+        await FirebaseAuth.instance.signInWithPopup(googleProvider);
+    await auth.signInWithCredential(credential.credential!);
+    analytics.logSignUp(signUpMethod: 'google');
+    setUser(auth.currentUser!);
+  }
+
   signInWithGoogle() async {
     showLoading();
     // Trigger the authentication flow
@@ -218,35 +244,41 @@ class _LogInState extends State<LogIn> {
 
   setUser(User user) async {
     final box = Hive.box('snack_box');
-    await box.put('uid', user.uid);
 
     DocumentReference reference = firestore.collection('users').doc(user.uid);
     DocumentSnapshot docSnapshot = await reference.get();
 
     bool hasPreference = true;
     if (!box.containsKey('preference')) {
-            Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
+      Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
 
       hasPreference = data != null;
       await box.put('preference',
           data != null ? data['preference'] : 'no_valid_preference');
       box.put('blocked', data != null ? data['blocked'] : []);
+    }
 
+    if (!docSnapshot.exists) {
+      await reference.set({'fcm': ''});
     }
 
     Navigator.pop(context);
-    if (!hasPreference)
-      Navigator.pushReplacementNamed(context, '/user/preferences');
-    else
+    if (!hasPreference) {
+      await Navigator.pushReplacementNamed(context, '/user/preferences');
+      await box.put('uid', user.uid);
+    } else {
+      await box.put('uid', user.uid);
       popUntilRoot();
+    }
 
     analytics.setUserId(user.uid);
-    String? token = await messaging.getToken();
-    if (!docSnapshot.exists) {
-      await reference.set({'fcm': token});
-    } else {
+    messaging
+        .getToken(
+            vapidKey:
+                'BOpT7H4ZzDw9DAEP1iZMFg_Z1zVNW47Okvb3oPX-e0iAO5YdoQd1SjYoM2Tx-1fsaYbXkOLihvJdNIiRFaOjggA')
+        .then((token) async {
       await reference.update({'fcm': token});
-    }
+    }).onError((error, stackTrace) {});
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');
