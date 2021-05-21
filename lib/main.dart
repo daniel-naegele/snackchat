@@ -1,11 +1,10 @@
-import 'dart:io';
 
+import 'package:algolia/algolia.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:snack_dating/home.dart';
@@ -15,7 +14,6 @@ import 'package:snack_dating/screens/login.dart';
 import 'package:snack_dating/screens/settings.dart';
 import 'package:snack_dating/screens/snack_preference.dart';
 import 'package:snack_dating/screens/start_screen.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

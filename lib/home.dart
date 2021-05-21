@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/chats.dart';
-import 'package:snack_dating/matches.dart';
+import 'package:snack_dating/screens/matches.dart';
 import 'package:snack_dating/screens/settings.dart' as settings;
 
 import 'db_schema/user.dart';
