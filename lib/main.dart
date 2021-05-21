@@ -53,10 +53,11 @@ class SnackDatingApp extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
-            builder: (context) {
-              return Chat(settings.name!.split('/')[2]);
-            },
-            settings: settings);
+          builder: (context) {
+            return Chat(settings.name!.split('/')[2]);
+          },
+          settings: settings,
+        );
       },
     );
   }
@@ -67,18 +68,16 @@ class SnackDatingMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    Stream<User?> authStream = auth.authStateChanges();
-
-    // AsyncSnapshot<User?> snapshot = useStream(authStream , initialData: null);
-    //
-    // return snapshot.hasData ? Home() : UserAuth();
-
-    // Use StreamBuilder as flutter_hooks is broken https://github.com/rrousselGit/flutter_hooks/pull/246
+    final box = Hive.box('snack_box');
     return StreamBuilder(
-        builder: (context, AsyncSnapshot<User?> snapshot) {
-          return snapshot.hasData ? Home() : UserAuth();
-        },
-        stream: authStream);
+      builder: (context, AsyncSnapshot<BoxEvent> snapshot) {
+        if (!snapshot.hasData) return UserAuth();
+        if (snapshot.data!.deleted) return UserAuth();
+        String? uid = snapshot.data!.value;
+        if (uid == null || uid == '') return UserAuth();
+        return Home();
+      },
+      stream: box.watch(key: 'uid'),
+    );
   }
 }

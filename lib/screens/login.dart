@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/composition/components.dart';
 import 'package:snack_dating/composition/oauth_logos.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LogIn extends StatefulWidget {
   @override
@@ -123,7 +124,8 @@ class _LogInState extends State<LogIn> {
                       style: ButtonStyle(
                           padding:
                               MaterialStateProperty.all(EdgeInsets.all(16))),
-                      onPressed: signInWithGoogle,
+                      onPressed: () =>
+                          kIsWeb ? signInWithGoogleWeb() : signInWithGoogle(),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -204,6 +206,18 @@ class _LogInState extends State<LogIn> {
     }
   }
 
+  signInWithGoogleWeb() async {
+    showLoading();
+    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+    UserCredential credential =
+        await FirebaseAuth.instance.signInWithPopup(googleProvider);
+    await auth.signInWithCredential(credential.credential!);
+    analytics.logSignUp(signUpMethod: 'google');
+    setUser(auth.currentUser!);
+  }
+
   signInWithGoogle() async {
     showLoading();
     // Trigger the authentication flow
@@ -230,7 +244,6 @@ class _LogInState extends State<LogIn> {
 
   setUser(User user) async {
     final box = Hive.box('snack_box');
-    await box.put('uid', user.uid);
 
     DocumentReference reference = firestore.collection('users').doc(user.uid);
     DocumentSnapshot docSnapshot = await reference.get();
@@ -245,23 +258,27 @@ class _LogInState extends State<LogIn> {
       box.put('blocked', data != null ? data['blocked'] : []);
     }
 
-    Navigator.pop(context);
-    if (!hasPreference)
-      Navigator.pushReplacementNamed(context, '/user/preferences');
-    else
-      popUntilRoot();
-
-    analytics.setUserId(user.uid);
     if (!docSnapshot.exists) {
       await reference.set({'fcm': ''});
     }
+
+    Navigator.pop(context);
+    if (!hasPreference) {
+      await Navigator.pushReplacementNamed(context, '/user/preferences');
+      await box.put('uid', user.uid);
+    } else {
+      await box.put('uid', user.uid);
+      popUntilRoot();
+    }
+
+    analytics.setUserId(user.uid);
     messaging
         .getToken(
             vapidKey:
                 'BOpT7H4ZzDw9DAEP1iZMFg_Z1zVNW47Okvb3oPX-e0iAO5YdoQd1SjYoM2Tx-1fsaYbXkOLihvJdNIiRFaOjggA')
         .then((token) async {
       await reference.update({'fcm': token});
-    }).onError((error, stackTrace)  {});
+    }).onError((error, stackTrace) {});
 
     // Refetch chat partners
     CollectionReference collection = firestore.collection('chats');

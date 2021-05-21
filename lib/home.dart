@@ -50,16 +50,27 @@ class _HomeState extends State<Home> {
       final docRef = collection.doc(user.uid);
       final snapshot = await docRef.get();
       final snackUser = snapshot.data();
-      if (snackUser == null || snackUser.preference != null) {
+      if (snackUser == null || snackUser.preference == null) {
         Future.delayed(Duration(milliseconds: 1000)).then((value) {
           if (!isCurrent('/user/preferences'))
             Navigator.pushNamed(context, '/user/preferences');
         });
       } else {
-        box.put('preference', snackUser.preference);
+        await box.put('preference', snackUser.preference);
       }
 
-      String? localToken = await messaging.getToken();
+      box.watch(key: 'preference').listen((event) {
+        // If it was deleted, we don't care
+        if (event.deleted) return;
+        setState(() {
+          _body = Matches(_complementary);
+        });
+      });
+
+      String? localToken = await messaging.getToken(
+        vapidKey:
+            'BOpT7H4ZzDw9DAEP1iZMFg_Z1zVNW47Okvb3oPX-e0iAO5YdoQd1SjYoM2Tx-1fsaYbXkOLihvJdNIiRFaOjggA',
+      );
       if (snapshot.data() != null && snackUser!.fcm != localToken)
         docRef.update({'fcm': localToken});
       messaging.onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
