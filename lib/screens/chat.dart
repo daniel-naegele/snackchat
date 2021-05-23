@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Chat extends HookWidget {
   final String chatId;
@@ -11,14 +12,20 @@ class Chat extends HookWidget {
   final box = Hive.box('snack_box');
   final TextEditingController controller = TextEditingController();
   final analytics = FirebaseAnalytics();
+  late final stream;
 
-  Chat(this.chatId, {Key? key}) : super(key: key);
+  Chat(this.chatId, {Key? key}) : super(key: key) {
+    stream = firestore
+        .collection('chats')
+        .doc(chatId)
+        .snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
     final uid = box.get('uid');
-    DocumentReference reference = firestore.collection('chats').doc(chatId);
-    AsyncSnapshot snapshot = useStream(reference.snapshots(), initialData: null);
+    AsyncSnapshot snapshot =
+    useStream(stream, initialData: null);
     if (!snapshot.hasData) return Scaffold();
     Map<String, dynamic> data = snapshot.data.data();
     List messages = data['messages'] ?? [];
@@ -31,7 +38,7 @@ class Chat extends HookWidget {
         title: Column(
           children: [
             Text(id),
-            if (preferences != null) Text(preferences[foreignIndex])
+            Text(preferences[foreignIndex]),
           ],
         ),
         actions: [
@@ -105,7 +112,7 @@ class Chat extends HookWidget {
 
   onSend(String uid) async {
     String text = controller.text;
-    if (text == null || text == "") return;
+    if (text == '') return;
     DocumentReference reference = firestore.collection('chats').doc(chatId);
     List messages = [
       {
@@ -124,13 +131,13 @@ class Chat extends HookWidget {
 
   blockUser(String user, BuildContext context) {
     showConfirmDialog(
-      'Blockieren bestätigen',
-      'Bist du dir sicher, dass du diesen Benutzer blockieren möchtest? Diese Aktion kann nicht rückgängig gemacht werden.',
-      'Blockieren',
+      AppLocalizations.of(context)!.blockConfirmation,
+      AppLocalizations.of(context)!.blockWarningMessage,
+      AppLocalizations.of(context)!.block,
       context,
-      () async {
+          () async {
         DocumentReference document =
-            FirebaseFirestore.instance.collection('users').doc(box.get('uid'));
+        FirebaseFirestore.instance.collection('users').doc(box.get('uid'));
         List localBlocked = box.get('blocked', defaultValue: []);
         localBlocked.add(user);
         box.put('blocked', localBlocked);
@@ -148,13 +155,13 @@ class Chat extends HookWidget {
 
   reportUser(String user, BuildContext context) {
     showConfirmDialog(
-      'Melden bestätigen',
-      'Bist du dir sicher, dass du diesen Benutzer melden möchtest? Diese Aktion kann nicht rückgängig gemacht werden.',
-      'Melden',
+      AppLocalizations.of(context)!.reportConfirmation,
+      AppLocalizations.of(context)!.reportWarningMessage,
+      AppLocalizations.of(context)!.report,
       context,
-      () async {
+          () async {
         CollectionReference collection =
-            FirebaseFirestore.instance.collection('reports');
+        FirebaseFirestore.instance.collection('reports');
         await collection.doc().set({
           'timestamp': DateTime.now(),
           'by': box.get('uid'),
@@ -173,40 +180,44 @@ class Chat extends HookWidget {
       BuildContext context, Function callback) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          ElevatedButton(
-            child: Text(buttonText),
-            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
-            onPressed: () =>  callback(),
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: Text(title),
+            content: Text(body),
+            actions: [
+              ElevatedButton(
+                child: Text(buttonText),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.red)),
+                onPressed: () => callback(),
+              ),
+              ElevatedButton(
+                child: Text(AppLocalizations.of(context)!.cancel),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Container(width: 8)
+            ],
           ),
-          ElevatedButton(
-            child: Text('Abbrechen'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          Container(width: 8)
-        ],
-      ),
     );
   }
 
   showSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => SimpleDialog(children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Aktion erfolgreich ausgeführt',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ]),
+      builder: (BuildContext context) =>
+          SimpleDialog(children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                AppLocalizations.of(context)!.actionSuccessfullyExecuted,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ]),
     );
   }
 }
@@ -320,7 +331,7 @@ class Disclaimer extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'ACHTUNG: Dieser Chat ist nicht verschlüsselt. Obwohl nur Administratoren Zugriff auf die Daten haben, sollten Sie keine sensiblen Informationen auf dieser Plattform austauschen.',
+              AppLocalizations.of(context)!.chatEncryptionWarning,
               textAlign: TextAlign.center,
             ),
           ),
@@ -331,9 +342,9 @@ class Disclaimer extends StatelessWidget {
 
 class Outline extends StatelessWidget {
   final Widget child;
-  final Color color;
+  final Color? color;
 
-  Outline({required this.child, required this.color});
+  Outline({required this.child, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +354,9 @@ class Outline extends StatelessWidget {
         child: Container(
           decoration: new BoxDecoration(
             color:
-                color == null ? Theme.of(context).dialogBackgroundColor : color,
+            color == null ? Theme
+                .of(context)
+                .dialogBackgroundColor : color,
             borderRadius: BorderRadius.circular(8),
           ),
           child: child,

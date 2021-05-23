@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:snack_dating/composition/components.dart';
@@ -22,7 +21,7 @@ class UserAuth extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 16),
-                    child: Text("Log In", style: TextStyle(fontSize: 32)),
+                    child: Text("Log In", style: TextStyle(fontSize: 32, color: Colors.black)),
                   ),
                 ),
               ),

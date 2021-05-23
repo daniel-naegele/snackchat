@@ -74,7 +74,7 @@ class _LogInState extends State<LogIn> {
                           onPressed: signIn,
                           child: Text(
                             'Sign In',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18, color: Colors.black),
                           ),
                         ),
                       ),

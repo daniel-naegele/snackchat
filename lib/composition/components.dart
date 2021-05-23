@@ -49,7 +49,9 @@ class Paragraph extends StatelessWidget {
   final TextStyle style;
 
   const Paragraph(
-      {Key? key, required this.text, this.style = const TextStyle(fontSize: 16)})
+      {Key? key,
+      required this.text,
+      this.style = const TextStyle(fontSize: 16)})
       : super(key: key);
 
   @override
@@ -66,9 +68,9 @@ class Paragraph extends StatelessWidget {
 
 class Outline extends StatelessWidget {
   final Widget child;
-  final Color color;
+  final Color? color;
 
-  Outline({required this.child, required this.color});
+  Outline({required this.child, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +80,7 @@ class Outline extends StatelessWidget {
         child: Container(
           decoration: new BoxDecoration(
             color:
-            color == null ? Theme.of(context).dialogBackgroundColor : color,
+                color == null ? Theme.of(context).dialogBackgroundColor : color,
             borderRadius: BorderRadius.circular(8),
           ),
           child: child,

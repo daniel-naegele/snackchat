@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/algolia_application.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef void BoolCallback(bool value);
 
@@ -95,7 +96,7 @@ class _MatchesState extends State<Matches> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Keine Partner mit diesen Präferenzen wurden gefunden :c',
+                AppLocalizations.of(context)!.noMatchesFound,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),
               ),
@@ -157,9 +158,9 @@ class FilterList extends StatelessWidget {
       child: PopupMenuButton(
         itemBuilder: (context) {
           return [
-            PopupMenuItem(child: Text('Nach Gleichem suchen'), value: false),
+            PopupMenuItem(child: Text(AppLocalizations.of(context)!.searchEqual), value: false),
             PopupMenuItem(
-                child: Text('Nach Komplementärem suchen'), value: true)
+                child: Text(AppLocalizations.of(context)!.searchComplementary), value: true)
           ];
         },
         icon: Icon(Icons.filter_list),
