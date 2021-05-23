@@ -48,6 +48,7 @@ class SnackDatingApp extends StatelessWidget {
       ],
       theme: ThemeData(
         primaryColor: Colors.amber,
+        accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: {

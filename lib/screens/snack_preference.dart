@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SnackPreference extends StatefulWidget {
   @override
@@ -33,9 +34,10 @@ class _SnackPreferenceState extends State<SnackPreference> {
 
   @override
   Widget build(BuildContext context) {
+    print(AppLocalizations.of(context));
     return Scaffold(
       appBar: AppBar(
-          title: Center(child: Text('Was schmeckt dir?')),
+          title: Center(child: Text(AppLocalizations.of(context)!.yourSnackPreference)),
           automaticallyImplyLeading: false),
       body: SingleChildScrollView(
         child: Form(
@@ -48,14 +50,14 @@ class _SnackPreferenceState extends State<SnackPreference> {
                 Image.asset('assets/snacks.jpg'),
                 Container(height: 16),
                 Text(
-                  "Wähle deine Lieblingssnacks aus und gebe die Reihenfolge unten an",
+                  AppLocalizations.of(context)!.selectFavoriteSnack,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20),
                 ),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   onChanged: (val) => preference = val,
-                  decoration: InputDecoration(hintText: 'Bsp.: "614532"'),
+                  decoration: InputDecoration(hintText: AppLocalizations.of(context)!.snackHint),
                   autovalidateMode: AutovalidateMode.always,
                   validator: (String? pref) => validator(pref!),
                 ),
@@ -69,7 +71,7 @@ class _SnackPreferenceState extends State<SnackPreference> {
                     ),
                   ),
                   child: Text(
-                    "Speichern",
+                    AppLocalizations.of(context)!.save,
                     style: TextStyle(fontSize: 24),
                   ),
                   onPressed: () async {
@@ -102,11 +104,11 @@ class _SnackPreferenceState extends State<SnackPreference> {
 
   String? validator(String input) {
     RegExp regExp = RegExp('([1-6]{6})');
-    if (!regExp.hasMatch(input)) return "Bitte gebe eine gültige Präferenz an";
+    if (!regExp.hasMatch(input)) return AppLocalizations.of(context)!.invalidPreference;
     for (int i = 0; i < input.length; i++) {
       String char = input[i];
       if (char.allMatches(input).length > 1)
-        return "Bitte gebe eine gültige Präferenz an";
+        return AppLocalizations.of(context)!.invalidPreference;
     }
     return null;
   }

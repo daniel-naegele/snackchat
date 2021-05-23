@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
 import '../composition/components.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Settings extends HookWidget {
   @override
@@ -23,18 +24,23 @@ class Settings extends HookWidget {
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
             ),
             child: Text(
-              'Ausloggen',
+              AppLocalizations.of(context)!.logOut,
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
             onPressed: () => logOut(context),
           ),
         ),
         ListTile(
-          title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 22)),
+          title: Text(
+            AppLocalizations.of(context)!.userId + uid,
+            style: TextStyle(fontSize: 22),
+          ),
         ),
         ListTile(
-          title: Text('Snack-Präferenz: $preference',
-              style: TextStyle(fontSize: 22)),
+          title: Text(
+            AppLocalizations.of(context)!.preference + preference,
+            style: TextStyle(fontSize: 22),
+          ),
         ),
 //        RaisedButton(
 //          color: Colors.red,
@@ -55,7 +61,8 @@ class Settings extends HookWidget {
         ),
         ListTile(
           leading: Icon(Icons.contact_mail),
-          title: Text('Impressum', style: TextStyle(fontSize: 24)),
+          title: Text(AppLocalizations.of(context)!.imprint,
+              style: TextStyle(fontSize: 24)),
           onTap: () {
             FirebaseAnalytics().logEvent(name: "open_imprint");
             Navigator.pushNamed(context, '/imprint');
@@ -63,7 +70,8 @@ class Settings extends HookWidget {
         ),
         ListTile(
           leading: Icon(Icons.security),
-          title: Text('Datenschutz', style: TextStyle(fontSize: 24)),
+          title: Text(AppLocalizations.of(context)!.privacyPolicy,
+              style: TextStyle(fontSize: 24)),
           onTap: () {
             FirebaseAnalytics().logEvent(name: "open_privacy");
             Navigator.pushNamed(context, '/privacy');
@@ -76,19 +84,19 @@ class Settings extends HookWidget {
   logOut(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    String content = 'Willst du dich wirklich ausloggen?';
+    String content = AppLocalizations.of(context)!.logOutConfirmationWarning;
     if (user.isAnonymous) {
-      content +=
-          '\nACHTUNG: Du hast dich anonym eingeloggt, du wirst dich danach nie wieder einloggen können!';
+      content += '\n';
+      content += AppLocalizations.of(context)!.logOutConfirmationAnon;
     }
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text('Ausloggen bestätigen'),
+        title: Text(AppLocalizations.of(context)!.logOutConfirm),
         content: Text(content),
         actions: [
           ElevatedButton(
-            child: Text('Ausloggen'),
+            child: Text(AppLocalizations.of(context)!.logOut),
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
             ),
@@ -110,7 +118,7 @@ class Settings extends HookWidget {
             },
           ),
           ElevatedButton(
-            child: Text('Abbrechen'),
+            child: Text(AppLocalizations.of(context)!.cancel),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -145,7 +153,7 @@ class FAQ extends StatelessWidget {
                   'Wir speichern nur die Snack-Präferenzen und die Informationen, die wir von den Authentifizierungsprovidern (z. B. Google oder Apple) bekommen. '
                   'Was sie dann in den Chats mit fremden Personen freigeben, ist dann noch mal eine andere Sache'),
           SubHeading(text: 'Wo ist der Source Code?'),
-          Paragraph(text: 'https://github.com/Butzlabben/snack_dating'),
+          Paragraph(text: 'https://github.com/Butzlabben/snackchat'),
         ],
       ),
     );
@@ -156,11 +164,11 @@ class Imprint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Impressum')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.imprint)),
       body: ListView(
         padding: const EdgeInsets.all(8.0).copyWith(top: 0),
         children: <Widget>[
-          Heading(text: 'Impressum'),
+          Heading(text: AppLocalizations.of(context)!.imprint),
           SubHeading(text: 'Angaben gemäß §5 TMG'),
           Paragraph(
               text: 'Daniel Nägele\n'
@@ -181,7 +189,7 @@ class Privacy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Datenschutz')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.privacyPolicy)),
       body: ListView(
         padding: const EdgeInsets.all(8.0).copyWith(top: 0),
         children: <Widget>[
