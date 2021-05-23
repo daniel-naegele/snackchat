@@ -34,7 +34,7 @@ class SnackDatingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     FirebaseAnalytics().logAppOpen();
     return MaterialApp(
-      title: 'Snack Dating',
+      title: 'SnackChat',
       theme: ThemeData(
         primaryColor: Colors.amber,
         visualDensity: VisualDensity.adaptivePlatformDensity,
