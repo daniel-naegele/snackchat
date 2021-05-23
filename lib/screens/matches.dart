@@ -62,7 +62,10 @@ class Matches extends StatefulWidget {
     }
 
     Algolia algolia = AlgoliaApplication.algolia;
-    final query = algolia.instance.index('preference').query(preference);
+    final query = algolia.instance
+        .index('preference')
+        .query(preference)
+        .setAnalytics(enabled: true);
 
     final snap = await query.getObjects();
     return filter(
