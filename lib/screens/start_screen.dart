@@ -60,10 +60,10 @@ class _BgPhotosState extends State<BgPhotos> {
   late Timer _timer;
 
   List<SnackPhoto> photos = [
-    SnackPhoto('assets/snack0.jpg'),
-    SnackPhoto('assets/snack1.jpg'),
-    SnackPhoto('assets/snack2.jpg'),
-    SnackPhoto('assets/snack3.jpg')
+    const SnackPhoto('assets/snack0.jpg'),
+    const SnackPhoto('assets/snack1.jpg'),
+    const SnackPhoto('assets/snack2.jpg'),
+    const SnackPhoto('assets/snack3.jpg')
   ];
 
   @override
