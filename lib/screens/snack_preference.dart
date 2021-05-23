@@ -34,7 +34,6 @@ class _SnackPreferenceState extends State<SnackPreference> {
 
   @override
   Widget build(BuildContext context) {
-    print(AppLocalizations.of(context));
     return Scaffold(
       appBar: AppBar(
           title: Center(child: Text(AppLocalizations.of(context)!.yourSnackPreference)),

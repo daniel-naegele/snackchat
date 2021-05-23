@@ -139,21 +139,13 @@ class FAQ extends StatelessWidget {
         padding: const EdgeInsets.all(8.0).copyWith(top: 0),
         children: <Widget>[
           Heading(text: 'FAQ'),
-          SubHeading(text: 'Warum ist die App so hässlich?'),
+          SubHeading(text: AppLocalizations.of(context)!.faqAppUglyHeading),
+          Paragraph(text: AppLocalizations.of(context)!.faqAppUglyAnswer),
+          SubHeading(text: AppLocalizations.of(context)!.faqDataCollection),
           Paragraph(
-              text:
-                  'Die App wurde in knapp 10 Stunden entwickelt, da bleibt leider wenig Zeit für sowas. Es wird wahrscheinlich ein Update deswegen noch erscheinen.'),
-          SubHeading(text: 'Was ist das Ziel des Ganzen?'),
-          Paragraph(
-              text:
-                  'Eigentlich eine Art Omegle oder ChatRoulette, aber basierend auf Snackspräferenzen. Das hier ist in erster Linie ein Spaßprojekt, aber weiß, was hier noch draus wird.'),
-          SubHeading(text: 'Welche Daten werden gesammelt?'),
-          Paragraph(
-              text:
-                  'Wir speichern nur die Snack-Präferenzen und die Informationen, die wir von den Authentifizierungsprovidern (z. B. Google oder Apple) bekommen. '
-                  'Was sie dann in den Chats mit fremden Personen freigeben, ist dann noch mal eine andere Sache'),
-          SubHeading(text: 'Wo ist der Source Code?'),
-          Paragraph(text: 'https://github.com/Butzlabben/snackchat'),
+              text: AppLocalizations.of(context)!.faqDataCollectionAnswer),
+          SubHeading(text: AppLocalizations.of(context)!.faqSource),
+          Paragraph(text: AppLocalizations.of(context)!.faqSourceAnswer),
         ],
       ),
     );
@@ -169,15 +161,18 @@ class Imprint extends StatelessWidget {
         padding: const EdgeInsets.all(8.0).copyWith(top: 0),
         children: <Widget>[
           Heading(text: AppLocalizations.of(context)!.imprint),
-          SubHeading(text: 'Angaben gemäß §5 TMG'),
+          SubHeading(text: AppLocalizations.of(context)!.imprintLaw),
           Paragraph(
               text: 'Daniel Nägele\n'
                   'Diepoldweg 13\n'
                   '70329 Stuttgart'),
           SizedBox(height: 24),
-          SubHeading(text: 'Kontakt'),
+          SubHeading(text: AppLocalizations.of(context)!.contact),
           Paragraph(
-            text: 'Email: info@naegele.dev \nTelefon: +4915734299398',
+            text: AppLocalizations.of(context)!.contactEmail +
+                ': info@naegele.dev \n' +
+                AppLocalizations.of(context)!.contactPhone +
+                ': +4915734299398',
           ),
         ],
       ),

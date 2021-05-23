@@ -27,5 +27,19 @@
   "logOutConfirmationAnon": "WARNING: As you are logged in anonymously, you won't be able to log in again with this account",
   "logOutConfirm": "Confirm logging out",
   "invalidEmail": "Please provide a valid email",
-  "tooShortPassword": "Please provide a longer password"
+  "tooShortPassword": "Please provide a longer password",
+  "accountDeactivated": "This account was deactivated for security reasons. If you think, this is a mistake, please contact info@naegele.dev",
+  "userNotFound": "The specified user could not be  found",
+  "wrongPassword": "The provided password is wrong",
+  "emailAlreadyInUse": "The provided email is already in use",
+  "imprintLaw": " Information in accordance with Section 5 TMG",
+  "contact": "Kontakt",
+  "contactEmail": "E-Mail",
+  "contactPhone": "Phone",
+  "faqAppUglyHeading": "Why is the app so ugly",
+  "faqAppUglyAnswer": "The initial version of app was developed in under 10 hours. But hopefully there will be an update regarding this issue.",
+  "faqDataCollection": "Which data gets collected?",
+  "faqDataCollectionAnswer": "Whe only save the text messages, your snack preference and information regarding your account (E-Mail, Auth-Provider, ...). Note that there are 3rd parties involved like Google Analytics, which may collect additional information",
+  "faqSource": "Where can I find the source code?",
+  "faqSourceAnswer": "https://github.com/Butzlabben/snackchat"
 }
