@@ -1,4 +1,4 @@
-import 'package:algolia/algolia.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,6 +13,7 @@ import 'package:snack_dating/screens/login.dart';
 import 'package:snack_dating/screens/settings.dart';
 import 'package:snack_dating/screens/snack_preference.dart';
 import 'package:snack_dating/screens/start_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,9 +35,20 @@ class SnackDatingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     FirebaseAnalytics().logAppOpen();
     return MaterialApp(
-      title: 'Snack Dating',
+      title: 'SnackChat',
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // English, no country code
+        const Locale('de', ''), // Spanish, no country code
+      ],
       theme: ThemeData(
         primaryColor: Colors.amber,
+        accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: {

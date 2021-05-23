@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
 import '../composition/components.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Settings extends HookWidget {
   @override
@@ -23,18 +24,23 @@ class Settings extends HookWidget {
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
             ),
             child: Text(
-              'Ausloggen',
+              AppLocalizations.of(context)!.logOut,
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
             onPressed: () => logOut(context),
           ),
         ),
         ListTile(
-          title: Text('Nutzer ID: $uid', style: TextStyle(fontSize: 22)),
+          title: Text(
+            AppLocalizations.of(context)!.userId + uid,
+            style: TextStyle(fontSize: 22),
+          ),
         ),
         ListTile(
-          title: Text('Snack-Präferenz: $preference',
-              style: TextStyle(fontSize: 22)),
+          title: Text(
+            AppLocalizations.of(context)!.preference + preference,
+            style: TextStyle(fontSize: 22),
+          ),
         ),
 //        RaisedButton(
 //          color: Colors.red,
@@ -55,7 +61,8 @@ class Settings extends HookWidget {
         ),
         ListTile(
           leading: Icon(Icons.contact_mail),
-          title: Text('Impressum', style: TextStyle(fontSize: 24)),
+          title: Text(AppLocalizations.of(context)!.imprint,
+              style: TextStyle(fontSize: 24)),
           onTap: () {
             FirebaseAnalytics().logEvent(name: "open_imprint");
             Navigator.pushNamed(context, '/imprint');
@@ -63,7 +70,8 @@ class Settings extends HookWidget {
         ),
         ListTile(
           leading: Icon(Icons.security),
-          title: Text('Datenschutz', style: TextStyle(fontSize: 24)),
+          title: Text(AppLocalizations.of(context)!.privacyPolicy,
+              style: TextStyle(fontSize: 24)),
           onTap: () {
             FirebaseAnalytics().logEvent(name: "open_privacy");
             Navigator.pushNamed(context, '/privacy');
@@ -76,19 +84,19 @@ class Settings extends HookWidget {
   logOut(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    String content = 'Willst du dich wirklich ausloggen?';
+    String content = AppLocalizations.of(context)!.logOutConfirmationWarning;
     if (user.isAnonymous) {
-      content +=
-          '\nACHTUNG: Du hast dich anonym eingeloggt, du wirst dich danach nie wieder einloggen können!';
+      content += '\n';
+      content += AppLocalizations.of(context)!.logOutConfirmationAnon;
     }
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text('Ausloggen bestätigen'),
+        title: Text(AppLocalizations.of(context)!.logOutConfirm),
         content: Text(content),
         actions: [
           ElevatedButton(
-            child: Text('Ausloggen'),
+            child: Text(AppLocalizations.of(context)!.logOut),
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
             ),
@@ -110,7 +118,7 @@ class Settings extends HookWidget {
             },
           ),
           ElevatedButton(
-            child: Text('Abbrechen'),
+            child: Text(AppLocalizations.of(context)!.cancel),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -131,21 +139,13 @@ class FAQ extends StatelessWidget {
         padding: const EdgeInsets.all(8.0).copyWith(top: 0),
         children: <Widget>[
           Heading(text: 'FAQ'),
-          SubHeading(text: 'Warum ist die App so hässlich?'),
+          SubHeading(text: AppLocalizations.of(context)!.faqAppUglyHeading),
+          Paragraph(text: AppLocalizations.of(context)!.faqAppUglyAnswer),
+          SubHeading(text: AppLocalizations.of(context)!.faqDataCollection),
           Paragraph(
-              text:
-                  'Die App wurde in knapp 10 Stunden entwickelt, da bleibt leider wenig Zeit für sowas. Es wird wahrscheinlich ein Update deswegen noch erscheinen.'),
-          SubHeading(text: 'Was ist das Ziel des Ganzen?'),
-          Paragraph(
-              text:
-                  'Eigentlich eine Art Omegle oder ChatRoulette, aber basierend auf Snackspräferenzen. Das hier ist in erster Linie ein Spaßprojekt, aber weiß, was hier noch draus wird.'),
-          SubHeading(text: 'Welche Daten werden gesammelt?'),
-          Paragraph(
-              text:
-                  'Wir speichern nur die Snack-Präferenzen und die Informationen, die wir von den Authentifizierungsprovidern (z. B. Google oder Apple) bekommen. '
-                  'Was sie dann in den Chats mit fremden Personen freigeben, ist dann noch mal eine andere Sache'),
-          SubHeading(text: 'Wo ist der Source Code?'),
-          Paragraph(text: 'https://github.com/Butzlabben/snack_dating'),
+              text: AppLocalizations.of(context)!.faqDataCollectionAnswer),
+          SubHeading(text: AppLocalizations.of(context)!.faqSource),
+          Paragraph(text: AppLocalizations.of(context)!.faqSourceAnswer),
         ],
       ),
     );
@@ -156,20 +156,23 @@ class Imprint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Impressum')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.imprint)),
       body: ListView(
         padding: const EdgeInsets.all(8.0).copyWith(top: 0),
         children: <Widget>[
-          Heading(text: 'Impressum'),
-          SubHeading(text: 'Angaben gemäß §5 TMG'),
+          Heading(text: AppLocalizations.of(context)!.imprint),
+          SubHeading(text: AppLocalizations.of(context)!.imprintLaw),
           Paragraph(
               text: 'Daniel Nägele\n'
                   'Diepoldweg 13\n'
                   '70329 Stuttgart'),
           SizedBox(height: 24),
-          SubHeading(text: 'Kontakt'),
+          SubHeading(text: AppLocalizations.of(context)!.contact),
           Paragraph(
-            text: 'Email: info@naegele.dev \nTelefon: +4915734299398',
+            text: AppLocalizations.of(context)!.contactEmail +
+                ': info@naegele.dev \n' +
+                AppLocalizations.of(context)!.contactPhone +
+                ': +4915734299398',
           ),
         ],
       ),
@@ -181,18 +184,18 @@ class Privacy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Datenschutz')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.privacyPolicy)),
       body: ListView(
         padding: const EdgeInsets.all(8.0).copyWith(top: 0),
         children: <Widget>[
           Heading(text: 'Privacy Policy'),
           Paragraph(
             text:
-                'Daniel Nägele built the Snack-Dating app as an Open Source app. This SERVICE is provided by at no cost and is intended for use as is.'
+                'Daniel Nägele built the SnackChat app as an Open Source app. This SERVICE is provided by at no cost and is intended for use as is.'
                 'This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.'
                 'If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing '
                 'and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.'
-                'The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at Snack-Dating unless otherwise defined in this Privacy Policy.',
+                'The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at SnackChat unless otherwise defined in this Privacy Policy.',
           ),
           SubHeading(text: 'Information Collection and Use'),
           Paragraph(

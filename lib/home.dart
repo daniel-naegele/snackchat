@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:snack_dating/chats.dart';
 import 'package:snack_dating/screens/matches.dart';
 import 'package:snack_dating/screens/settings.dart' as settings;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'db_schema/user.dart';
 
@@ -82,7 +83,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Snack-Dating'),
+        title: Text('SnackChat'),
         centerTitle: true,
         actions: [
           _index != 0
@@ -105,7 +106,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: "Einstellungen",
+            label: AppLocalizations.of(context)!.settings,
           ),
         ],
       ),
