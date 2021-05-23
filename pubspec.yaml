@@ -22,6 +22,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   flutter_hooks: ^0.17.0
   neuomorphic_container: 2.0.3
@@ -56,7 +58,7 @@ flutter_icons:
   image_path_ios: "images/Icon-512.png"
 
 flutter:
-
+  generate: true
   uses-material-design: true
 
   assets:
