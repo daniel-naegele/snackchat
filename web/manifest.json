@@ -1,6 +1,6 @@
 {
-    "name": "snack_dating",
-    "short_name": "snack_dating",
+    "name": "SnackChat",
+    "short_name": "SnackChat",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
