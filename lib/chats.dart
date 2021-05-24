@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Chats extends HookWidget {
   final box = Hive.box('snack_box');
-  late Stream<QuerySnapshot<Map<String, dynamic>>> stream;
+  late final Stream<QuerySnapshot<Map<String, dynamic>>> stream;
   late final blocked;
 
   Chats() {

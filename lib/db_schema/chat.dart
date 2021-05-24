@@ -1,29 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatMetadata {
-  final DateTime lastMessage;
+  final Timestamp lastMessage;
   final List<String> members;
+  final List<String> preferences;
 
   ChatMetadata({
     required this.lastMessage,
     required this.members,
+    required this.preferences
   });
 
   ChatMetadata.fromJson(Map<String, Object?> json)
       : this(
-    lastMessage: json['fcm']! as DateTime,
-    members: json['preference']! as List<String>,
+    lastMessage: json['last_message']! as Timestamp,
+    members: json['members']! as List<String>,
+    preferences: json['preferences']! as List<String>,
   );
 
   Map<String, Object?> toJson() {
     return {
       'last_message': lastMessage,
       'members': members,
+      'preferences': preferences
+
     };
   }
 }
 
 
 class ChatMessage {
-  final DateTime timestamp;
+  final Timestamp timestamp;
   final String author;
   final String text;
 
@@ -35,7 +42,7 @@ class ChatMessage {
 
   ChatMessage.fromJson(Map<String, Object?> json)
       : this(
-    timestamp: json['timestamp']! as DateTime,
+    timestamp: json['timestamp']! as Timestamp,
     text: json['text']! as String,
     author: json['author']! as String
   );
