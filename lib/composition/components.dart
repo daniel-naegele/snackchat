@@ -8,13 +8,13 @@ class ChatTile extends HookWidget {
 
   final box = Hive.box('snack_box');
   final ChatMetadata chatMetadata;
-  final String chatId;
+  final VoidCallback callback;
   late final Future<QuerySnapshot<Map<String, dynamic>>> lastMessageFuture;
 
-  ChatTile({Key? key, required this.chatMetadata, required this.chatId}) : super(key: key) {
+  ChatTile({Key? key, required this.callback, required this.chatMetadata}) : super(key: key) {
     lastMessageFuture = FirebaseFirestore.instance
         .collection('chats')
-        .doc(chatId)
+        .doc(chatMetadata.id)
         .collection('messages')
         .orderBy('timestamp', descending: true)
         .limit(1)
@@ -32,7 +32,7 @@ class ChatTile extends HookWidget {
       leading: Icon(Icons.chat_bubble),
       title: Text(_getOtherUser(chatMetadata.members)),
       subtitle: Text(lastMessage ?? ''),
-      onTap: () => Navigator.pushNamed(context, '/chats/$chatId}'),
+      onTap: () => callback(),
     );
   }
 

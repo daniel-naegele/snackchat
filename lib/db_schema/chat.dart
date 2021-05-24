@@ -4,6 +4,7 @@ class ChatMetadata {
   final Timestamp lastMessage;
   final List<String> members;
   final List<String> preferences;
+  String? id;
 
   ChatMetadata({
     required this.lastMessage,
@@ -14,8 +15,8 @@ class ChatMetadata {
   ChatMetadata.fromJson(Map<String, Object?> json)
       : this(
     lastMessage: json['last_message']! as Timestamp,
-    members: json['members']! as List<String>,
-    preferences: json['preferences']! as List<String>,
+    members: (json['members']! as List<dynamic>).cast<String>(),
+    preferences: (json['preferences']! as List<dynamic>).cast<String>(),
   );
 
   Map<String, Object?> toJson() {

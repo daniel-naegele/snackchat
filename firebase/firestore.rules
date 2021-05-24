@@ -1,24 +1,34 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-  
+
     match /users/{user} {
       allow read;
       allow create: if request.auth.uid == user;
       allow delete: if request.auth.uid == user;
-      allow update: if request.auth.uid == user && (!('preference' in resource.data) ||
-      request.resource.data.preference == resource.data.preference);
+      allow update: if request.auth.uid == user && (!('preference' in resource.data) || request.resource.data.preference == resource.data.preference);
     }
 
     match /chats/{id} {
       allow read: if request.auth.uid in resource.data.members;
       allow create: if request.auth.uid != null;
       allow update: if request.auth.uid == request.resource.data.messages[request.resource.data.messages.size() - 1].author
-      && "" != request.resource.data.messages[request.resource.data.messages.size() - 1]
-      && request.auth.uid in resource.data.members
-      && request.resource.data.members == resource.data.members;
+        && "" != request.resource.data.messages[request.resource.data.messages.size() - 1]
+        && request.auth.uid in resource.data.members
+        && request.resource.data.members == resource.data.members;
+
+      function chatData() {
+        return get(/databases/$(database)/documents/chats/$(id)).data;
+      }
+
+      match /messages/{messageId} {
+        allow read: if request.auth.uid in chatData().members;
+        allow create: if request.auth.uid in chatData().members
+          && request.auth.uid == request.resource.data.author;
+        allow update, delete: if false;
+      }
     }
-    
+
     match /chats1/{id} {
       allow read, write: if false;
     }

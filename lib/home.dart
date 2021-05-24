@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
-import 'package:snack_dating/chats.dart';
+import 'package:snack_dating/screens/chat_list.dart';
 import 'package:snack_dating/screens/matches.dart';
 import 'package:snack_dating/screens/settings.dart' as settings;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'db_schema/user.dart';
 

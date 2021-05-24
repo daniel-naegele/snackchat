@@ -11,7 +11,6 @@ class ChatPage extends HookWidget {
   final String chatId;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final box = Hive.box('snack_box');
-  final TextEditingController controller = TextEditingController();
   final analytics = FirebaseAnalytics();
   late final Future<DocumentSnapshot<ChatMetadata>> chatInfoFuture;
 
@@ -37,11 +36,13 @@ class ChatPage extends HookWidget {
     String id = data.members[foreignIndex];
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          children: [
-            Text(id),
-            Text(data.preferences[foreignIndex]),
-          ],
+        title: Center(
+          child: Column(
+            children: [
+              Text(id),
+              Text(data.preferences[foreignIndex]),
+            ],
+          ),
         ),
         actions: [
           IconButton(
@@ -50,62 +51,8 @@ class ChatPage extends HookWidget {
               icon: Icon(Icons.flag), onPressed: () => reportUser(id, context))
         ],
       ),
-      body: Column(
-        children: [
-          ChatMessageList(chatId: chatId, uid: uid),
-          Container(
-            height: 70,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(8),
-                bottomRight: Radius.circular(8),
-              ),
-              color: Color.fromRGBO(220, 220, 220, 1),
-            ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(16))),
-                      child: TextField(
-                        autocorrect: true,
-                        controller: controller,
-                        style: TextStyle(fontSize: 20),
-                        decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(left: 4)),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: IconButton(
-                      icon: Icon(Icons.send, color: Colors.blueAccent),
-                      onPressed: () => onSend(uid)),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+      body: ChatMessageList(chatId: chatId, uid: uid),
     );
-  }
-
-  onSend(String uid) async {
-    String text = controller.text;
-    if (text == '') return;
-    final reference =
-        firestore.collection('chats').doc(chatId).collection('messages').doc();
-    final message =
-        ChatMessage(timestamp: Timestamp.now(), text: text, author: uid);
-    await reference.set(message.toJson());
-    analytics.logEvent(name: "send_message", parameters: {"id": chatId});
-    controller.clear();
   }
 
   blockUser(String user, BuildContext context) {
