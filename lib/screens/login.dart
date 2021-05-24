@@ -33,7 +33,10 @@ class _LogInState extends State<LogIn> {
         key: _key,
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: shouldConstraint ? width / 2 : width),
+            constraints: BoxConstraints(
+              maxWidth: shouldConstraint ? width / 2 : width,
+              minWidth: 240,
+            ),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -79,7 +82,8 @@ class _LogInState extends State<LogIn> {
                             onPressed: signIn,
                             child: Text(
                               'Sign In',
-                              style: TextStyle(fontSize: 18, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ),
                         ),
@@ -92,7 +96,8 @@ class _LogInState extends State<LogIn> {
                             onPressed: register,
                             child: Text(
                               'Register',
-                              style: TextStyle(color: Colors.white, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
                             ),
                           ),
                         ),

@@ -1,4 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:snack_dating/db_schema/chat.dart';
+
+class ChatTile extends StatelessWidget {
+
+  final box = Hive.box('snack_box');
+  final ChatMetadata chatMetadata;
+  final String chatId;
+  final String? lastChatMessage;
+
+  ChatTile({Key? key, required this.chatMetadata, required this.chatId, this.lastChatMessage}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.chat_bubble),
+      title: Text(_getOtherUser(chatMetadata.members)),
+      subtitle: Text(lastChatMessage ?? ''),
+      onTap: () => Navigator.pushNamed(context, '/chats/$chatId}'),
+    );
+  }
+
+  String _getOtherUser(List members) {
+    final uid = box.get('uid');
+    members.removeWhere((element) => element == uid);
+    String id = members[0];
+    return id;
+  }
+}
 
 class Heading extends StatelessWidget {
   final String text;

@@ -20,36 +20,33 @@ class Chats extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: stream,
-      builder: (BuildContext context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-        if (!snapshot.hasData) return Center(child: Text('Loading...'));
-        QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot<Object?>;
-        List<QueryDocumentSnapshot> documents = []..addAll(querySnapshot.docs);
+    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>?> snapshot =
+        useStream(stream);
+    if (!snapshot.hasData) return Center(child: Text('Loading...'));
+    QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot<Object?>;
+    List<QueryDocumentSnapshot> documents = []..addAll(querySnapshot.docs);
 
-        documents.removeWhere((element) {
-          Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-          return blocked.contains(getOtherUser(data['members']));
-        });
+    documents.removeWhere((element) {
+      Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+      return blocked.contains(getOtherUser(data['members']));
+    });
 
-        if (documents.length == 0) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                AppLocalizations.of(context)!.noChats,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          );
-        }
-        return ListView.builder(
-          itemCount: documents.length,
-          itemBuilder: (context, index) => _buildTile(context, index, documents),
-        );
-      },
+    if (documents.length == 0) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            AppLocalizations.of(context)!.noChats,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: documents.length,
+      itemBuilder: (context, index) => _buildTile(context, index, documents),
     );
   }
 

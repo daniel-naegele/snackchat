@@ -1,9 +1,20 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:snack_dating/composition/components.dart';
 
 class UserAuth extends StatelessWidget {
+
+  UserAuth() {
+    doShit();
+  }
+
+  doShit() async {
+    final snapshot = await FirebaseFirestore.instance.collection("chats1").doc('Re6Q84PiB28Nr3t8VfKR').get();
+    print(snapshot.data());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
