@@ -1,4 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hive/hive.dart';
+import 'package:snack_dating/db_schema/chat.dart';
+
+class ChatTile extends HookWidget {
+
+  final box = Hive.box('snack_box');
+  final ChatMetadata chatMetadata;
+  final VoidCallback callback;
+  late final Future<QuerySnapshot<Map<String, dynamic>>> lastMessageFuture;
+
+  ChatTile({Key? key, required this.callback, required this.chatMetadata}) : super(key: key) {
+    lastMessageFuture = FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatMetadata.id)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final snap = useFuture(lastMessageFuture);
+    String? lastMessage;
+    if (snap.data != null && snap.data!.size > 0) {
+      lastMessage = snap.data!.docs[0].data()['text'];
+    }
+    return ListTile(
+      leading: Icon(Icons.chat_bubble),
+      title: Text(_getOtherUser(chatMetadata.members)),
+      subtitle: Text(lastMessage ?? ''),
+      onTap: () => callback(),
+    );
+  }
+
+  String _getOtherUser(List members) {
+    final uid = box.get('uid');
+    members.removeWhere((element) => element == uid);
+    String id = members[0];
+    return id;
+  }
+}
 
 class Heading extends StatelessWidget {
   final String text;
