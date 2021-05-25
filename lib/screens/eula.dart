@@ -94,7 +94,7 @@ class _EULAState extends State<EULA> {
               title: Text('Accept'),
             ),
             Outline(
-              color: _accepted == 0 ? Colors.grey : Colors.amberAccent,
+              color: _accepted == 0 ? Colors.grey : Theme.of(context).primaryColor,
               child: FlatButton(
                 onPressed: () {
                   if (_accepted != 1) return;

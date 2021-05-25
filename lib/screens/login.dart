@@ -74,7 +74,7 @@ class _LogInState extends State<LogIn> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Outline(
-                          color: Colors.yellow,
+                          color: Theme.of(context).primaryColor,
                           child: TextButton(
                             style: ButtonStyle(
                                 padding: MaterialStateProperty.all(

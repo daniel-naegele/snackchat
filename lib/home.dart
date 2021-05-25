@@ -51,7 +51,9 @@ class _HomeState extends State<Home> {
       final docRef = collection.doc(user.uid);
       final snapshot = await docRef.get();
       final snackUser = snapshot.data();
-      if (snackUser == null || snackUser.preference == null) {
+      if (snackUser == null ||
+          snackUser.preference == null ||
+          snackUser.preference == 'no_valid_preference') {
         Future.delayed(Duration(milliseconds: 1000)).then((value) {
           if (!isCurrent('/user/preferences'))
             Navigator.pushNamed(context, '/user/preferences');

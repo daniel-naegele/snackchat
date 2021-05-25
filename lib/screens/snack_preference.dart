@@ -36,7 +36,8 @@ class _SnackPreferenceState extends State<SnackPreference> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Center(child: Text(AppLocalizations.of(context)!.yourSnackPreference)),
+          title: Center(
+              child: Text(AppLocalizations.of(context)!.yourSnackPreference)),
           automaticallyImplyLeading: false),
       body: SingleChildScrollView(
         child: Form(
@@ -46,7 +47,13 @@ class _SnackPreferenceState extends State<SnackPreference> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset('assets/snacks.jpg'),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 1024,
+                    maxHeight: 859,
+                  ),
+                  child: Image.asset('assets/snacks.jpg'),
+                ),
                 Container(height: 16),
                 Text(
                   AppLocalizations.of(context)!.selectFavoriteSnack,
@@ -56,15 +63,16 @@ class _SnackPreferenceState extends State<SnackPreference> {
                 TextFormField(
                   keyboardType: TextInputType.number,
                   onChanged: (val) => preference = val,
-                  decoration: InputDecoration(hintText: AppLocalizations.of(context)!.snackHint),
+                  decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.snackHint),
                   autovalidateMode: AutovalidateMode.always,
                   validator: (String? pref) => validator(pref!),
                 ),
                 Container(height: 16),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.amberAccent),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).primaryColor),
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                       EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     ),
@@ -103,7 +111,8 @@ class _SnackPreferenceState extends State<SnackPreference> {
 
   String? validator(String input) {
     RegExp regExp = RegExp('([1-6]{6})');
-    if (!regExp.hasMatch(input)) return AppLocalizations.of(context)!.invalidPreference;
+    if (!regExp.hasMatch(input))
+      return AppLocalizations.of(context)!.invalidPreference;
     for (int i = 0; i < input.length; i++) {
       String char = input[i];
       if (char.allMatches(input).length > 1)
