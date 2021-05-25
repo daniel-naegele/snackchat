@@ -21,7 +21,7 @@ class ChatMessageList extends HookWidget {
         .collection('chats')
         .doc(chatId)
         .collection('messages')
-        .orderBy('timestamp', descending: false)
+        .orderBy('timestamp', descending: true)
         .withConverter(
           fromFirestore: (snapshot, _) =>
               ChatMessage.fromJson(snapshot.data()!),
@@ -49,11 +49,12 @@ class ChatMessageList extends HookWidget {
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: messages.length + 1,
+                reverse: true,
                 itemBuilder: (context, i) {
-                  if (i == 0)
+                  if (i == messages.length)
                     return Disclaimer();
                   else
-                    return ChatMessageWidget(messages[i - 1], uid);
+                    return ChatMessageWidget(messages[i], uid);
                 },
               ),
             ),
