@@ -9,8 +9,8 @@ class SnackUser {
 
   SnackUser.fromJson(Map<String, Object?> json)
       : this(
-          fcm: json['fcm']! as String?,
-          preference: json['preference']! as String?,
+          fcm: json['fcm'] as String?,
+          preference: json['preference'] as String?,
         );
 
   Map<String, Object?> toJson() {

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:snack_dating/home.dart';
-import 'package:snack_dating/screens/chat.dart';
+import 'package:snack_dating/screens/chat_page.dart';
 import 'package:snack_dating/screens/eula.dart';
 import 'package:snack_dating/screens/login.dart';
 import 'package:snack_dating/screens/settings.dart';
@@ -47,7 +47,7 @@ class SnackDatingApp extends StatelessWidget {
         const Locale('de', ''), // Spanish, no country code
       ],
       theme: ThemeData(
-        primaryColor: Colors.amber,
+        primaryColor: Color(0xFF88D2D1),
         accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -63,7 +63,7 @@ class SnackDatingApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
           builder: (context) {
-            return Chat(settings.name!.split('/')[2]);
+            return ChatPage(settings.name!.split('/')[2]);
           },
           settings: settings,
         );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:snack_dating/composition/components.dart';
 
 class UserAuth extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +16,7 @@ class UserAuth extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 64, left: 32, right: 32),
               child: Outline(
-                color: Colors.amberAccent,
+                color: Theme.of(context).primaryColor,
                 child: TextButton(
                   onPressed: () => Navigator.pushNamed(context, '/eula'),
                   child: Padding(
