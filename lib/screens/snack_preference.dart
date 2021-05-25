@@ -50,7 +50,7 @@ class _SnackPreferenceState extends State<SnackPreference> {
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 1024,
-                    maxHeight: 859,
+                    maxHeight: 460,
                   ),
                   child: Image.asset('assets/snacks.jpg'),
                 ),
