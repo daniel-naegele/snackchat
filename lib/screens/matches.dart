@@ -3,10 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/algolia_application.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef void BoolCallback(bool value);
 
@@ -16,7 +15,7 @@ class Matches extends StatefulWidget {
   late final uid;
   late final chatPartners;
   late final CollectionReference<Map<String, Object?>> collection;
-  late Future<List<Match>> matches;
+  late final Future<List<Match>> matches;
 
   Matches(this.complementary) {
     final box = Hive.box('snack_box');

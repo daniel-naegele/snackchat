@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
-import 'package:snack_dating/chats.dart';
+import 'package:snack_dating/screens/chat_list.dart';
 import 'package:snack_dating/screens/matches.dart';
 import 'package:snack_dating/screens/settings.dart' as settings;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'db_schema/user.dart';
 
@@ -51,7 +51,9 @@ class _HomeState extends State<Home> {
       final docRef = collection.doc(user.uid);
       final snapshot = await docRef.get();
       final snackUser = snapshot.data();
-      if (snackUser == null || snackUser.preference == null) {
+      if (snackUser == null ||
+          snackUser.preference == null ||
+          snackUser.preference == 'no_valid_preference') {
         Future.delayed(Duration(milliseconds: 1000)).then((value) {
           if (!isCurrent('/user/preferences'))
             Navigator.pushNamed(context, '/user/preferences');

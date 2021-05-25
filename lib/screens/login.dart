@@ -25,120 +25,131 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
+    final data = MediaQuery.of(context);
+    final width = data.size.width;
+    bool shouldConstraint = width > 720;
     return Scaffold(
       body: Form(
         key: _key,
         child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextFormField(
-                    validator: (_) => validateEmailAddress(_!),
-                    onSaved: (_) => email = _!.trim(),
-                    autocorrect: false,
-                    autofillHints: [AutofillHints.email],
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.email),
-                      border: border,
-                      labelText: 'Email',
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  TextFormField(
-                    validator: (_) => validatePassword(_!),
-                    onSaved: (_) => password = _!.trim(),
-                    autocorrect: false,
-                    obscureText: true,
-                    autofillHints: [AutofillHints.password],
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.vpn_key),
-                      labelText: 'Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: shouldConstraint ? width / 2 : width,
+              minWidth: 240,
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      validator: (_) => validateEmailAddress(_!),
+                      onSaved: (_) => email = _!.trim(),
+                      autocorrect: false,
+                      autofillHints: [AutofillHints.email],
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.email),
+                        border: border,
+                        labelText: 'Email',
                       ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Outline(
-                        color: Colors.yellow,
-                        child: TextButton(
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.all(16))),
-                          onPressed: signIn,
-                          child: Text(
-                            'Sign In',
-                            style: TextStyle(fontSize: 18, color: Colors.black),
-                          ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      validator: (_) => validatePassword(_!),
+                      onSaved: (_) => password = _!.trim(),
+                      autocorrect: false,
+                      obscureText: true,
+                      autofillHints: [AutofillHints.password],
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.vpn_key),
+                        labelText: 'Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
                         ),
                       ),
-                      Outline(
-                        color: Colors.grey,
-                        child: TextButton(
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.all(16))),
-                          onPressed: register,
-                          child: Text(
-                            'Register',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Outline(
+                          color: Theme.of(context).primaryColor,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(16))),
+                            onPressed: signIn,
+                            child: Text(
+                              'Sign In',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'or',
-                    style: Theme.of(context).textTheme.overline,
-                  ),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 300),
-                    child: const Divider(
-                      thickness: 2,
+                        Outline(
+                          color: Colors.grey,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(16))),
+                            onPressed: register,
+                            child: Text(
+                              'Register',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Outline(
-                    color: Colors.blue,
-                    child: TextButton(
-                      style: ButtonStyle(
-                          padding:
-                              MaterialStateProperty.all(EdgeInsets.all(16))),
-                      onPressed: signInAnon,
-                      child: Text(
-                        'Sign In Anonymously',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'or',
+                      style: Theme.of(context).textTheme.overline,
                     ),
-                  ),
-                  Outline(
-                    color: Colors.white,
-                    child: TextButton(
-                      style: ButtonStyle(
-                          padding:
-                              MaterialStateProperty.all(EdgeInsets.all(16))),
-                      onPressed: () =>
-                          kIsWeb ? signInWithGoogleWeb() : signInWithGoogle(),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OAuthIcon.google(),
-                          SizedBox(width: 8),
-                          Text('Sign In with Google',
-                              style: TextStyle(fontSize: 18)),
-                        ],
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 300),
+                      child: const Divider(
+                        thickness: 2,
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Outline(
+                      color: Colors.blue,
+                      child: TextButton(
+                        style: ButtonStyle(
+                            padding:
+                                MaterialStateProperty.all(EdgeInsets.all(16))),
+                        onPressed: signInAnon,
+                        child: Text(
+                          'Sign In Anonymously',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    Outline(
+                      color: Colors.white,
+                      child: TextButton(
+                        style: ButtonStyle(
+                            padding:
+                                MaterialStateProperty.all(EdgeInsets.all(16))),
+                        onPressed: () =>
+                            kIsWeb ? signInWithGoogleWeb() : signInWithGoogle(),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            OAuthIcon.google(),
+                            SizedBox(width: 8),
+                            Text('Sign In with Google',
+                                style: TextStyle(fontSize: 18)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
