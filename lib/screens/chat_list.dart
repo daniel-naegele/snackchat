@@ -81,7 +81,7 @@ class _ChatListState extends State<ChatList> {
     return Row(
       children: [
         ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 120, maxWidth: 480),
+          constraints: BoxConstraints(minWidth: 120, maxWidth: 360),
           child: ListView.builder(
             itemCount: widget.chats.length,
             itemBuilder: (context, index) {
@@ -108,7 +108,7 @@ class _ChatListState extends State<ChatList> {
     setState(() {
       final box = Hive.box('snack_box');
       final uid = box.get('uid');
-      _chat = ChatMessageList(chatId: id, uid: uid);
+      _chat = Expanded(child: ChatMessageList(chatId: id, uid: uid));
     });
   }
 }
