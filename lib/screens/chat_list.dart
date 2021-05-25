@@ -8,7 +8,6 @@ import 'package:snack_dating/composition/components.dart';
 import 'package:snack_dating/db_schema/chat.dart';
 
 class Chats extends HookWidget {
-
   final box = Hive.box('snack_box');
   late final Stream<QuerySnapshot<Map<String, dynamic>>> stream;
   late final blocked;
@@ -98,8 +97,13 @@ class _ChatListState extends State<ChatList> {
             },
           ),
         ),
-        if (isWideScreen)
-          _chat
+        if (isWideScreen) ...[
+          VerticalDivider(
+            thickness: 2,
+            width: 2,
+          ),
+          _chat,
+        ]
       ],
     );
   }
@@ -108,7 +112,9 @@ class _ChatListState extends State<ChatList> {
     setState(() {
       final box = Hive.box('snack_box');
       final uid = box.get('uid');
-      _chat = Expanded(child: ChatMessageList(chatId: id, uid: uid));
+      _chat = Expanded(
+        child: ChatMessageList(chatId: id, uid: uid, inCompositionView: true),
+      );
     });
   }
 }

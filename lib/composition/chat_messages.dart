@@ -9,12 +9,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ChatMessageList extends HookWidget {
   final String chatId;
   final String uid;
+  final bool inCompositionView;
   final firestore = FirebaseFirestore.instance;
   final analytics = FirebaseAnalytics();
   final TextEditingController controller = TextEditingController();
   late final Stream<QuerySnapshot<ChatMessage>> messageStream;
 
-  ChatMessageList({Key? key, required this.chatId, required this.uid})
+  ChatMessageList({Key? key, required this.chatId, required this.uid, required this.inCompositionView})
       : super(key: key) {
     messageStream = FirebaseFirestore.instance
         .collection('chats')
@@ -61,10 +62,10 @@ class ChatMessageList extends HookWidget {
         Container(
           height: 70,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
+            borderRadius: !inCompositionView ? BorderRadius.only(
               bottomLeft: Radius.circular(8),
               bottomRight: Radius.circular(8),
-            ),
+            ) : BorderRadius.zero,
             color: Color.fromRGBO(220, 220, 220, 1),
           ),
           child: Row(

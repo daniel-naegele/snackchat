@@ -47,7 +47,7 @@ class SnackDatingApp extends StatelessWidget {
         const Locale('de', ''), // Spanish, no country code
       ],
       theme: ThemeData(
-        primaryColor: Colors.amber,
+        primaryColor: Color(0xFF88D2D1),
         accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),

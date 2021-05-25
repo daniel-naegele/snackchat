@@ -51,7 +51,7 @@ class ChatPage extends HookWidget {
               icon: Icon(Icons.flag), onPressed: () => reportUser(id, context))
         ],
       ),
-      body: ChatMessageList(chatId: chatId, uid: uid),
+      body: ChatMessageList(chatId: chatId, uid: uid, inCompositionView: false),
     );
   }
 
