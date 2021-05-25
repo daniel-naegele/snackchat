@@ -5,8 +5,11 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-exports.chatNotification = functions.firestore
-    .document('chats/{chatId}/messages/{messageId}').onCreate(async (snapshot, context) => {
+exports.chatNotification = functions
+    .region('europe-west3')
+    .firestore
+    .document('chats/{chatId}/messages/{messageId}')
+    .onCreate(async (snapshot, context) => {
         const newMessage = snapshot.data();
         const author = newMessage.author;
         const chatRef = db.doc('chats/' + snapshot.ref.parent.parent?.id);
