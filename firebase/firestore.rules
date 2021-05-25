@@ -29,10 +29,6 @@ service cloud.firestore {
       }
     }
 
-    match /chats1/{id} {
-      allow read, write: if false;
-    }
-
     match /reports/{reportId} {
       allow create: if request.auth.uid != null && request.auth.uid == request.resource.data.by;
     }
