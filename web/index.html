@@ -19,6 +19,22 @@
     <title>SnackChat - find people with a good taste</title>
     <link rel="manifest" href="manifest.json">
 
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-5RWZ999');</script>
+    <!-- End Google Tag Manager -->
+
     <!--Preload some stuff-->
     <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js">
     <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js">
@@ -26,8 +42,22 @@
     <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js">
     <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js">
     <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.2/firebase-app-check.js">
+
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/8.6.2/firebase-app-check.js">
 </head>
 <body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5RWZ999"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
