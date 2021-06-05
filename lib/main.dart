@@ -7,11 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:snack_dating/home.dart';
-import 'package:snack_dating/screens/chat_page.dart';
-import 'package:snack_dating/screens/eula.dart';
-import 'package:snack_dating/screens/login.dart';
-import 'package:snack_dating/screens/settings.dart';
-import 'package:snack_dating/screens/snack_preference.dart';
+import 'package:snack_dating/screens/chat_page.dart' deferred as chat;
+import 'package:snack_dating/screens/eula.dart' deferred as eula;
+import 'package:snack_dating/screens/login.dart' deferred as login;
+import 'package:snack_dating/screens/settings.dart' deferred as settings;
+import 'package:snack_dating/screens/snack_preference.dart'
+    deferred as snack_preference;
 import 'package:snack_dating/screens/start_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -53,17 +54,40 @@ class SnackDatingApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) => SnackDatingMain(),
-        '/imprint': (context) => Imprint(),
-        '/eula': (context) => EULA(),
-        '/privacy': (context) => Privacy(),
-        '/faq': (context) => FAQ(),
-        '/user/login': (context) => LogIn(),
-        '/user/preferences': (context) => SnackPreference(),
+        '/imprint': (context) => FutureBuilder(
+              builder: (snap, con) => settings.Imprint(),
+              future: settings.loadLibrary(),
+            ),
+        '/eula': (context) => FutureBuilder(
+          builder: (snap, con) => eula.EULA(),
+          future: eula.loadLibrary(),
+        ),
+        '/privacy': (context) => FutureBuilder(
+          builder: (snap, con) => settings.Privacy(),
+          future: settings.loadLibrary(),
+        ),
+        '/faq': (context) => FutureBuilder(
+          builder: (snap, con) => settings.FAQ(),
+          future: settings.loadLibrary(),
+        ),
+        '/user/login': (context) => FutureBuilder(
+          builder: (snap, con) => login.LogIn(),
+          future: login.loadLibrary(),
+        ),
+        '/user/preferences': (context) => FutureBuilder(
+          builder: (snap, con) => snack_preference.SnackPreference(),
+          future: snack_preference.loadLibrary(),
+        ),
       },
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
           builder: (context) {
-            return ChatPage(settings.name!.split('/')[2]);
+            return FutureBuilder(
+              future: chat.loadLibrary(),
+              builder: (context, snapshot) {
+                return chat.ChatPage(settings.name!.split('/')[2]);
+              }
+            );
           },
           settings: settings,
         );

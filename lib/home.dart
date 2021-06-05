@@ -4,9 +4,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
-import 'package:snack_dating/screens/chat_list.dart';
+import 'package:snack_dating/screens/chat_list.dart' deferred as chat_list;
 import 'package:snack_dating/screens/matches.dart';
-import 'package:snack_dating/screens/settings.dart' as settings;
+import 'package:snack_dating/screens/settings.dart' deferred as settings;
 
 import 'db_schema/user.dart';
 
@@ -20,6 +20,8 @@ class _HomeState extends State<Home> {
   int _index = 0;
   bool _complementary = false;
   Widget _body = Matches(false);
+
+  late Future settingsLoading, chatListLoading;
 
   bool isCurrent(String routeName) {
     bool isCurrent = false;
@@ -35,6 +37,9 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    chatListLoading = chat_list.loadLibrary();
+    settingsLoading = settings.loadLibrary();
+
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     messaging.requestPermission();
     final exec = () async {
@@ -121,9 +126,19 @@ class _HomeState extends State<Home> {
       if (_index == 0) {
         _body = Matches(_complementary);
       } else if (_index == 1) {
-        _body = Chats();
+        _body = FutureBuilder(
+          future: chatListLoading,
+          builder: (context, snapshot) {
+            return chat_list.Chats();
+          }
+        );
       } else if (_index == 2) {
-        _body = settings.Settings();
+        _body = FutureBuilder(
+            future: settingsLoading,
+            builder: (context, snapshot) {
+              return settings.Settings();
+            }
+        );
       }
     });
   }
