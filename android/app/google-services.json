@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "930184663597-7stfkb36ctau4abh0gql5c998aeufqto.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.butzlabben.snack_dating",
+            "certificate_hash": "2eaa394f15972fcec737e1e0f57d6472e52c1de2"
+          }
+        },
+        {
           "client_id": "930184663597-d3gqqru3241vi8p81dh7tutmgblhq4g6.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,14 @@
             {
               "client_id": "930184663597-d3gqqru3241vi8p81dh7tutmgblhq4g6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "930184663597-skg89d1jonpf170ifs8b4kbhmpug7vc6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "de.butzlabben.snack-dating",
+                "app_store_id": "1527346900"
+              }
             }
           ]
         }
