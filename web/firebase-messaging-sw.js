@@ -13,7 +13,7 @@ firebase.initializeApp({
     storageBucket: "snack-dating-2981c.appspot.com",
     messagingSenderId: "930184663597",
     appId: "1:930184663597:web:162f3af2423081edfb1ea4",
-    measurementId: "G-F56C9P9KVB"
+    measurementId: "G-Q6DJ9JJLLN"
 });
 
 
