@@ -54,8 +54,59 @@ exports.chatNotification = functions
             .then((response: any) => {
                 console.log('Successfully sent message: ', response);
             })
-           .catch((error: any) => {
-              console.log('Error sending message: ', error);
-           });
+            .catch((error: any) => {
+                console.log('Error sending message: ', error);
+            });
+        return 0;
+    });
+
+
+exports.chatCreateNotification = functions
+    .region('europe-west3')
+    .firestore
+    .document('chats/{chatId}')
+    .onCreate(async (snapshot, context) => {
+        const data = snapshot.data();
+
+
+        const creator = data.members[0];
+        const targetUser = await db.doc('users/' + data.members[1]).get();
+
+        if (!targetUser.exists) return -1;
+
+        const blocked = targetUser.data()?.blocked;
+        if (blocked !== undefined) {
+            if (blocked.includes(creator)) return -1;
+        }
+
+        const fcm = targetUser.data()?.fcm;
+        if (fcm === undefined || fcm === '') return -1;
+
+        const message = {
+            data: {
+                id: data.id,
+                type: 'accepted',
+            },
+            token: fcm,
+            notification: {
+                title: 'New chat',
+                body: creator + ' has started a new chat with you',
+            },
+            apns: {
+                payload: {
+                    aps: {
+                        sound: "default",
+                    }
+                }
+            }
+        };
+
+        admin.messaging().send(message)
+            .then((response: any) => {
+                console.log('Successfully sent chat create notification: ', response);
+            })
+            .catch((error: any) => {
+                console.log('Error sending chat create notification: ', error);
+            });
         return 0;
     });
