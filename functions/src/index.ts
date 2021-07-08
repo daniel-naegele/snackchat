@@ -90,7 +90,7 @@ exports.chatCreateNotification = functions
             token: fcm,
             notification: {
                 title: 'New chat',
-                body: creator + ' has started a new chat with you',
+                body: 'A user has started a new chat with you',
             },
             apns: {
                 payload: {
