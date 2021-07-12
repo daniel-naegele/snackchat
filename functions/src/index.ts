@@ -84,7 +84,7 @@ exports.chatCreateNotification = functions
 
         const message = {
             data: {
-                id: data.id,
+                id: snapshot.id,
                 type: 'accepted',
             },
             token: fcm,
