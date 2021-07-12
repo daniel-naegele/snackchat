@@ -76,7 +76,9 @@ class _HomeState extends State<Home> {
       );
       if (snapshot.data() != null && snackUser!.fcm != localToken)
         docRef.update({'fcm': localToken});
-      messaging.onTokenRefresh.listen((token) => docRef.update({'fcm': token}));
+      messaging.onTokenRefresh.listen((token) {
+        docRef.update({'fcm': token});
+      });
     };
     exec();
   }

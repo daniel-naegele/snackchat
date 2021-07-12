@@ -1,21 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:snack_dating/db_schema/chat.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatMessageList extends HookWidget {
   final String chatId;
   final String uid;
-  final bool inCompositionView;
   final firestore = FirebaseFirestore.instance;
   final analytics = FirebaseAnalytics();
   final TextEditingController controller = TextEditingController();
   late final Stream<QuerySnapshot<ChatMessage>> messageStream;
 
-  ChatMessageList({Key? key, required this.chatId, required this.uid, required this.inCompositionView})
+  ChatMessageList(
+      {Key? key,
+      required this.chatId,
+      required this.uid})
       : super(key: key) {
     messageStream = FirebaseFirestore.instance
         .collection('chats')
@@ -62,13 +65,7 @@ class ChatMessageList extends HookWidget {
         ),
         Container(
           height: 70,
-          decoration: BoxDecoration(
-            borderRadius: !inCompositionView ? BorderRadius.only(
-              bottomLeft: Radius.circular(8),
-              bottomRight: Radius.circular(8),
-            ) : BorderRadius.zero,
             color: Color.fromRGBO(220, 220, 220, 1),
-          ),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -80,13 +77,17 @@ class ChatMessageList extends HookWidget {
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                     child: TextField(
-                      autocorrect: true,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (_) {
+                        onSend(uid);
+                      },
+                      autofocus: true,
                       controller: controller,
                       style: TextStyle(fontSize: 20),
                       decoration: new InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(left: 4),
-                      ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(left: 4),
+                          hintText: 'Type your message here'),
                     ),
                   ),
                 ),
