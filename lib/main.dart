@@ -44,12 +44,13 @@ class SnackDatingApp extends StatelessWidget {
       ],
       supportedLocales: [
         const Locale('en', ''), // English, no country code
-        const Locale('de', ''), // Spanish, no country code
+        const Locale('de', ''), // German, no country code
       ],
       theme: ThemeData(
         primaryColor: Color(0xFF88D2D1),
         accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        brightness: Brightness.light,
       ),
       routes: {
         '/': (context) => SnackDatingMain(),
