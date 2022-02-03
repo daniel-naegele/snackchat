@@ -5,6 +5,43 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+exports.reportMail = functions
+    .region('europe-west3')
+    .firestore
+    .document('reports/{reportId}')
+    .onCreate(async (snapshot, context) => {
+        const report = snapshot.data();
+        const by = report.by;
+        const reported = report.reported;
+
+        const chatQuery = await db.collection('chats')
+            .where('members', 'array-contains', reported)
+            .get();
+
+        const chat =  chatQuery.docs.find(data => data.data().members.includes(by));
+
+        // @ts-ignore
+        const messages = await db.collection('/chats/' + chat.id + '/messages').orderBy('timestamp', 'desc').get();
+
+        var body = '';
+        messages.docs.forEach((msg) => {
+            body = body.concat('Author: ' + msg.data().author + '</br>');
+            body = body.concat('Time: ' + msg.data().timestamp.toDate().toISOString() + '</br>');
+            body = body.concat('Text: ' + msg.data().text + '</br></br>');
+        });
+
+        await admin.firestore().collection('mail').add({
+            to: 'info@naegele.dev',
+            from: 'noreply@naegele.dev',
+            message: {
+                subject: 'SnackChat Report ' + snapshot.id,
+                html: 'Report by ' + by + '. Reported: ' + reported + '</br></br></br>' + body,
+            },
+        });
+
+        return 0;
+    });
+
 exports.chatNotification = functions
     .region('europe-west3')
     .firestore
