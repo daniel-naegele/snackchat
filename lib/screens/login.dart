@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:snack_dating/composition/components.dart';
 import 'package:snack_dating/composition/oauth_logos.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LogIn extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class LogIn extends StatefulWidget {
 
 class _LogInState extends State<LogIn> {
   final _key = GlobalKey<FormState>();
-  final analytics = FirebaseAnalytics();
+  final analytics = FirebaseAnalytics.instance;
   final auth = FirebaseAuth.instance;
   final messaging = FirebaseMessaging.instance;
   final firestore = FirebaseFirestore.instance;
@@ -106,7 +106,7 @@ class _LogInState extends State<LogIn> {
                     const SizedBox(height: 16),
                     Text(
                       'or',
-                      style: Theme.of(context).textTheme.overline,
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 300),
@@ -282,7 +282,7 @@ class _LogInState extends State<LogIn> {
       popUntilRoot();
     }
 
-    analytics.setUserId(user.uid);
+    analytics.setUserId(id: user.uid);
     messaging
         .getToken(
             vapidKey:

@@ -3,18 +3,7 @@ description: A chat app purely based on snack preferences
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.4+22
+version: 1.2.5+23
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -26,22 +15,21 @@ dependencies:
     sdk: flutter
 
   flutter_hooks: ^0.17.0
-  neuomorphic_container: 2.0.3
   back_button_interceptor: 5.0.0
   hive: ^2.0.4
   hive_flutter: ^1.0.0
-  intl: ^0.17.0
+  intl: ^0.18.0
 
   algolia: ^1.0.1
 
   # Firebase
-  firebase_analytics: ^8.1.0
-  cloud_firestore: ^2.2.0
-  firebase_auth: ^1.2.0
-  firebase_core: ^1.2.0
-  firebase_messaging: ^10.0.0
+  firebase_analytics: ^10.4.4
+  cloud_firestore: ^4.8.3
+  firebase_auth: ^4.7.1
+  firebase_core: ^2.15.0
+  firebase_messaging: ^14.6.5
 
-  google_sign_in: 5.0.3
+  google_sign_in: ^6.1.4
 
   cupertino_icons: ^1.0.2
 

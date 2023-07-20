@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -11,14 +10,11 @@ class ChatMessageList extends HookWidget {
   final String chatId;
   final String uid;
   final firestore = FirebaseFirestore.instance;
-  final analytics = FirebaseAnalytics();
+  final analytics = FirebaseAnalytics.instance;
   final TextEditingController controller = TextEditingController();
   late final Stream<QuerySnapshot<ChatMessage>> messageStream;
 
-  ChatMessageList(
-      {Key? key,
-      required this.chatId,
-      required this.uid})
+  ChatMessageList({Key? key, required this.chatId, required this.uid})
       : super(key: key) {
     messageStream = FirebaseFirestore.instance
         .collection('chats')
@@ -113,7 +109,7 @@ class ChatMessageList extends HookWidget {
     final message =
         ChatMessage(timestamp: Timestamp.now(), text: text, author: uid);
     await reference.set(message.toJson());
-    analytics.logEvent(name: "send_message", parameters: {"id": chatId});
+    await analytics.logEvent(name: "send_message", parameters: {"id": chatId});
     controller.clear();
   }
 }

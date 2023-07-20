@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 
 import '../composition/components.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Settings extends HookWidget {
   @override
@@ -55,7 +55,7 @@ class Settings extends HookWidget {
           leading: Icon(Icons.question_answer),
           title: Text('FAQ', style: TextStyle(fontSize: 24)),
           onTap: () {
-            FirebaseAnalytics().logEvent(name: "open_faq");
+            FirebaseAnalytics.instance.logEvent(name: "open_faq");
             Navigator.pushNamed(context, '/faq');
           },
         ),
@@ -64,7 +64,7 @@ class Settings extends HookWidget {
           title: Text(AppLocalizations.of(context)!.imprint,
               style: TextStyle(fontSize: 24)),
           onTap: () {
-            FirebaseAnalytics().logEvent(name: "open_imprint");
+            FirebaseAnalytics.instance.logEvent(name: "open_imprint");
             Navigator.pushNamed(context, '/imprint');
           },
         ),
@@ -73,7 +73,7 @@ class Settings extends HookWidget {
           title: Text(AppLocalizations.of(context)!.privacyPolicy,
               style: TextStyle(fontSize: 24)),
           onTap: () {
-            FirebaseAnalytics().logEvent(name: "open_privacy");
+            FirebaseAnalytics.instance.logEvent(name: "open_privacy");
             Navigator.pushNamed(context, '/privacy');
           },
         ),
@@ -102,7 +102,7 @@ class Settings extends HookWidget {
             ),
             onPressed: () async {
               final box = Hive.box('snack_box');
-              FirebaseAnalytics().logEvent(name: "logout");
+              FirebaseAnalytics.instance.logEvent(name: "logout");
               DocumentReference reference =
                   FirebaseFirestore.instance.doc('/users/' + box.get('uid'));
               bool stillExists = (await reference.get()).exists;

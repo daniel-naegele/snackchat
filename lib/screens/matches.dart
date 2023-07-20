@@ -1,7 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
@@ -127,7 +126,7 @@ class _MatchesState extends State<Matches> {
           'preferences': [box.get('preference'), preference],
           'last_message': DateTime.now(),
         });
-        FirebaseAnalytics()
+        FirebaseAnalytics.instance
             .logEvent(name: "create_chat", parameters: {"id": document.id});
         List chatPartners = box.get('chat_partners', defaultValue: []);
         chatPartners.add(id);

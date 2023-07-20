@@ -1,9 +1,10 @@
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:snack_dating/home.dart';
@@ -13,7 +14,6 @@ import 'package:snack_dating/screens/login.dart';
 import 'package:snack_dating/screens/settings.dart';
 import 'package:snack_dating/screens/snack_preference.dart';
 import 'package:snack_dating/screens/start_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ void main() async {
 class SnackDatingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FirebaseAnalytics().logAppOpen();
+    FirebaseAnalytics.instance.logAppOpen();
     return MaterialApp(
       title: 'SnackChat',
       localizationsDelegates: [
@@ -48,9 +48,9 @@ class SnackDatingApp extends StatelessWidget {
       ],
       theme: ThemeData(
         primaryColor: Color(0xFF88D2D1),
-        accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.black),
       ),
       routes: {
         '/': (context) => SnackDatingMain(),
@@ -74,7 +74,7 @@ class SnackDatingApp extends StatelessWidget {
 }
 
 class SnackDatingMain extends StatelessWidget {
-  final analytics = FirebaseAnalytics();
+  final analytics = FirebaseAnalytics.instance;
 
   @override
   Widget build(BuildContext context) {

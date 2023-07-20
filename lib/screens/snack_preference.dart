@@ -2,10 +2,9 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
 
 class SnackPreference extends StatefulWidget {
   @override
@@ -93,7 +92,7 @@ class _SnackPreferenceState extends State<SnackPreference> {
                         FirebaseFirestore.instance.collection('users');
                     DocumentReference docRef = collection.doc(user.uid);
                     await docRef.update({"preference": preference});
-                    FirebaseAnalytics analytics = FirebaseAnalytics();
+                    FirebaseAnalytics analytics = FirebaseAnalytics.instance;
                     analytics.setUserProperty(
                         name: 'preference', value: preference);
                     analytics.logEvent(name: "set_preference");

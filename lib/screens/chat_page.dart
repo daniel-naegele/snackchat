@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:snack_dating/composition/chat_messages.dart';
 import 'package:snack_dating/db_schema/chat.dart';
 
@@ -11,7 +11,7 @@ class ChatPage extends HookWidget {
   final String chatId;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final box = Hive.box('snack_box');
-  final analytics = FirebaseAnalytics();
+  final analytics = FirebaseAnalytics.instance;
   late final Future<DocumentSnapshot<ChatMetadata>> chatInfoFuture;
 
   ChatPage(this.chatId, {Key? key}) : super(key: key) {

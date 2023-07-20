@@ -95,7 +95,7 @@ class _EULAState extends State<EULA> {
             ),
             Outline(
               color: _accepted == 0 ? Colors.grey : Theme.of(context).primaryColor,
-              child: FlatButton(
+              child: ElevatedButton(
                 onPressed: () {
                   if (_accepted != 1) return;
                   Navigator.pushReplacementNamed(context, '/user/login');
