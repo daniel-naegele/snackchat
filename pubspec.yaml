@@ -1,0 +1,53 @@
+name: snack_dating
+description: A chat app purely based on snack preferences
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.2.5+24
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  flutter_hooks: ^0.19.0
+  back_button_interceptor: ^6.0.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  intl: ^0.18.0
+
+  algolia: ^1.0.1
+
+  # Firebase
+  firebase_analytics: ^10.4.4
+  cloud_firestore: ^4.8.3
+  firebase_auth: ^4.7.1
+  firebase_core: ^2.15.0
+  firebase_messaging: ^14.6.5
+
+  google_sign_in: ^6.1.4
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path_android: "images/android_logo.png"
+  image_path_ios: "images/Icon-512.png"
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  assets:
+    - assets/

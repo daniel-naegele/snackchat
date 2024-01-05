@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="A chat app purely based on snack preferences. Meet others with the same taste">
+    <meta name="keywords" content="Snacks, Chat, Chatting, App">
+    <meta name="robots" content="index,follow"/>
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="snack_dating">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+
+    <title>SnackChat - find people with a good taste</title>
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-5RWZ999');</script>
+    <!-- End Google Tag Manager -->
+
+    <!--Preload some stuff-->
+    <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js">
+    <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js">
+    <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js">
+    <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js">
+    <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js">
+    <link rel="preconnect" href="https://www.gstatic.com/firebasejs/8.6.2/firebase-app-check.js">
+</head>
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5RWZ999"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app-check.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyBsaWvigCHqSPPBIHabwZiCWgCmte2O6sY",
+        authDomain: "snack-dating-2981c.firebaseapp.com",
+        databaseURL: "https://snack-dating-2981c.firebaseio.com",
+        projectId: "snack-dating-2981c",
+        storageBucket: "snack-dating-2981c.appspot.com",
+        messagingSenderId: "930184663597",
+        appId: "1:930184663597:web:162f3af2423081edfb1ea4",
+        measurementId: "G-Q6DJ9JJLLN"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    const appCheck = firebase.appCheck();
+    appCheck.activate('6LeIouEaAAAAAIHCJwZQrK5bsSi8iO9irgr4WQr2');
+</script>
+
+<script src="main.dart.js" type="application/javascript"></script>
+
+<!-- This script installs service_worker.js to provide PWA functionality to
+     application. For more information, see:
+     https://developers.google.com/web/fundamentals/primers/service-workers -->
+<script>
+    var serviceWorkerVersion = null;
+    var scriptLoaded = false;
+
+    function loadMainDartJs() {
+        if (scriptLoaded) {
+            return;
+        }
+        scriptLoaded = true;
+        var scriptTag = document.createElement('script');
+        scriptTag.src = 'main.dart.js';
+        scriptTag.type = 'application/javascript';
+        document.body.append(scriptTag);
+    }
+
+    if ('serviceWorker' in navigator) {
+        // Service workers are supported. Use them.
+        window.addEventListener('load', function () {
+            // Wait for registration to finish before dropping the <script> tag.
+            // Otherwise, the browser will load the script multiple times,
+            // potentially different versions.
+            var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+            navigator.serviceWorker.register(serviceWorkerUrl)
+                .then((reg) => {
+                    function waitForActivation(serviceWorker) {
+                        serviceWorker.addEventListener('statechange', () => {
+                            if (serviceWorker.state == 'activated') {
+                                console.log('Installed new service worker.');
+                                loadMainDartJs();
+                            }
+                        });
+                    }
+
+                    if (!reg.active && (reg.installing || reg.waiting)) {
+                        // No active web worker and we have installed or are installing
+                        // one for the first time. Simply wait for it to activate.
+                        waitForActivation(reg.installing ?? reg.waiting);
+                    } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
+                        // When the app updates the serviceWorkerVersion changes, so we
+                        // need to ask the service worker to update.
+                        console.log('New service worker available.');
+                        reg.update();
+                        waitForActivation(reg.installing);
+                    } else {
+                        // Existing service worker is still good.
+                        console.log('Loading app from service worker.');
+                        loadMainDartJs();
+                    }
+                });
+
+            // If service worker doesn't succeed in a reasonable amount of time,
+            // fallback to plaint <script> tag.
+            setTimeout(() => {
+                if (!scriptLoaded) {
+                    console.warn(
+                        'Failed to load app from service worker. Falling back to plain <script> tag.',
+                    );
+                    loadMainDartJs();
+                }
+            }, 4000);
+        });
+    } else {
+        // Service workers not supported. Just drop the <script> tag.
+        loadMainDartJs();
+    }
+</script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register("/flutter_service_worker.js");
+            navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        });
+    }
+</script>
+</body>
+</html>
